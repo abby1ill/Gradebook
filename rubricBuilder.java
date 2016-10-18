@@ -122,8 +122,6 @@ public class rubricBuilder {
                     percentPanel.add(percent1);
                 }
 
-                //listPanel.setBackground(new Color(188, 86, 86));
-
                 listPanel.add(assignmentPanel);
                 listPanel.add(new JLabel("                                  "));
                 listPanel.add(percentPanel);
