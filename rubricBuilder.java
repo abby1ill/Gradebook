@@ -27,7 +27,7 @@ public class rubricBuilder {
 
     public static void main(String[] args) {
         rubricBuilder RubricBuilder = new rubricBuilder();
-        RubricBuilder.showRubricEvent(); //eventually put this in a while loop (i think)
+        RubricBuilder.showRubricEvent();
     }
 
     private void rubricGUI() {
