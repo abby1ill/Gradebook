@@ -1,4 +1,7 @@
-import java.util.Arrays;
+import java.util.*;
+import java.util.List;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -14,7 +17,7 @@ public class loginPage {
       mainFrameCreation();
    }
 
-   public static void main(String[] args){
+   public static void main(String[] args) {
       loginPage LoginPage = new loginPage();  
       LoginPage.showLoginEvent();       
    }
@@ -117,14 +120,21 @@ public class loginPage {
       headerLabel.setFont(new Font("Georgia", Font.PLAIN, 30));
       headerLabel.setForeground(Color.white);
 
-      String[] semesters = { "Fall 2016", "Spring 2015", "Fall 2015"};
+      String[] semesters = getSemesterList();
 		JComboBox<String> semesterList = new JComboBox<>(semesters);
 
-      testClass= new JButton("Test label will go here");
-		JButton testClass2 = new JButton("Test label 2");
-		testClass.setAlignmentX(Component.CENTER_ALIGNMENT);
-      testClass2.setAlignmentX(Component.CENTER_ALIGNMENT);
+		int size = semesters.length;
 
+		JLabel classList = new JLabel("Classes: " + size);
+      classList.setFont(new Font("Georgia", Font.PLAIN, 25));
+      classList.setForeground(Color.white);
+
+		JButton[] classButton = new JButton[size];
+
+		for (int i=0; i<size; i++) {
+			classButton[i] = new JButton("Class " + i);
+			classButton[i].setAlignmentX(Component.CENTER_ALIGNMENT);
+		}
 
       classPagePanel.setBackground(new Color(188, 86, 86));
       topPanel.setBackground(new Color(188, 86, 86));
@@ -136,8 +146,12 @@ public class loginPage {
 		topPanel.add(semesterList);
 		topPanel.add(createSemester);
 		leftPanel.add(createClass);
-		classListPanel.add(testClass);
-		classListPanel.add(testClass2);
+		classListPanel.add(classList);
+		
+		for (int j=0; j<size; j++) {
+			classListPanel.add(classButton[j]);
+		}
+
 		classPagePanel.add(topPanel, BorderLayout.NORTH);
 		classPagePanel.add(leftPanel, BorderLayout.WEST);
 		classPagePanel.add(classListPanel, BorderLayout.CENTER);
@@ -145,4 +159,25 @@ public class loginPage {
 
 		mainFrame.add(classPagePanel);
 	}
+
+	private String[] getSemesterList() {
+		try {
+			Scanner semesterFile = new Scanner(new File("/Users/abbyoneill/JavaPractice/Gradebook/testing.txt"));
+
+			List<String> lines = new ArrayList<String>();
+			while (semesterFile.hasNextLine()) {
+  				lines.add(semesterFile.nextLine());
+			}
+			String[] semesters = lines.toArray(new String[0]);
+	
+			return semesters;
+		}
+		catch (FileNotFoundException ex) {
+			System.out.println(ex.getMessage());
+			String[] semesters = { "No semesters created" };	
+		
+			return semesters;
+		}
+	}
 }
+
