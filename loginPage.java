@@ -1,6 +1,9 @@
 import java.util.*;
 import java.util.List;
 import java.io.File;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.awt.*;
 import java.awt.event.*;
@@ -9,7 +12,7 @@ import javax.swing.*;
 public class loginPage {
    private JFrame mainFrame;
    private JLabel headerLabel;
-   private JPanel loginPanel, classPagePanel;
+   private JPanel loginPanel, topPanel, classPagePanel;
    private JTextField usernameField;
    private JPasswordField passwordField;
 
@@ -78,29 +81,54 @@ public class loginPage {
       mainFrame.setVisible(true);  
    }
 
-   private class ButtonClickListener implements ActionListener{
+   public class ButtonClickListener implements ActionListener{
       public void actionPerformed(ActionEvent e) {
          String command = e.getActionCommand();  
          if(command.equals( "Login" ))  {
-	    String username = "cpapadakis";
-   	    char[] password = { 'p', 'a', 's', 's', 'w', 'o', 'r', 'd'};
+	    		String username = "cpapadakis";
+   	    	char[] password = { 'p', 'a', 's', 's', 'w', 'o', 'r', 'd'};
 
             String userEntry = usernameField.getText();
-	    char[] passEntry = passwordField.getPassword();
-	    if (userEntry.equals(username) & Arrays.equals(passEntry, password)) {
+	    		char[] passEntry = passwordField.getPassword();
+	    		if (userEntry.equals(username) & Arrays.equals(passEntry, password)) {
                loginPanel.setVisible(false);
 					classPageGUI();
             }
             else {
                JOptionPane.showMessageDialog(mainFrame, "Invalid username/password", "Error", JOptionPane.ERROR_MESSAGE);
             }
-         } 
+         }
+
+			if (command.equals("createSemester")) {
+				String newSemester = JOptionPane.showInputDialog(mainFrame, "Enter semester and year: ");
+
+				try {
+					File semesterFile = new File("/Users/abbyoneill/JavaPractice/Gradebook/testing.txt");
+
+					if(!semesterFile.exists()){
+						semesterFile.createNewFile();
+					}
+
+					FileWriter writer = new FileWriter(semesterFile.getName(),true);
+
+					BufferedWriter buffer = new BufferedWriter(writer);
+					buffer.write(newSemester + "\n");
+					buffer.close();
+
+					topPanel.revalidate();
+					topPanel.repaint();
+				}
+
+				catch(IOException creationError){
+    				creationError.printStackTrace();
+    			}
+			} 
       }		
    }
 
 
-	private void classPageGUI(){
-		JPanel topPanel, leftPanel, classListPanel;
+	public void classPageGUI(){
+		JPanel leftPanel, classListPanel;
 		JButton testClass;
 
       classPagePanel = new JPanel();
@@ -116,6 +144,9 @@ public class loginPage {
 		JButton createSemester = new JButton("Create new semester");
 		JButton createClass = new JButton("Create new class");
 
+		createSemester.setActionCommand("createSemester");
+      createSemester.addActionListener(new ButtonClickListener());
+
 		headerLabel.setText("Current Semester:");
       headerLabel.setFont(new Font("Georgia", Font.PLAIN, 30));
       headerLabel.setForeground(Color.white);
@@ -125,7 +156,7 @@ public class loginPage {
 
 		int size = semesters.length;
 
-		JLabel classList = new JLabel("Classes: " + size);
+		JLabel classList = new JLabel("Classes: ");
       classList.setFont(new Font("Georgia", Font.PLAIN, 25));
       classList.setForeground(Color.white);
 
