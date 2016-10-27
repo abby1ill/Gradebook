@@ -1,20 +1,18 @@
-/**
- * Created by Timmy on 10/13/2016.
- */
-
 import java.util.ArrayList;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
 public class rubricBuilder {
-    private JFrame mainFrame;
+    private JFrame rubricFrame;
     private JLabel headerLabel;
     private JPanel headerPanel;
     private JPanel listPanel;
     private JPanel addPanel;
     private JTextField typeField;
     private JTextField percentField;
+	 private JButton addButton, createButton;
+
 
     ArrayList<JLabel> classes = new ArrayList<>();
     ArrayList<JLabel> percents = new ArrayList<>();
@@ -23,22 +21,18 @@ public class rubricBuilder {
 
     public rubricBuilder(){
         rubricGUI();
-    }
-
-    public static void main(String[] args) {
-        rubricBuilder RubricBuilder = new rubricBuilder();
-        RubricBuilder.showRubricEvent();
+		  showRubricEvent();
     }
 
     private void rubricGUI() {
-        mainFrame = new JFrame("Rubric Builder");
-        mainFrame.setSize(700, 400);
-        mainFrame.setLayout(new GridLayout(4, 1));
-        mainFrame.getContentPane().setBackground(new Color(188, 86, 86));
+        rubricFrame = new JFrame("Rubric Builder");
+        rubricFrame.setSize(1000, 700);
+        rubricFrame.setLayout(new GridLayout(4, 1));
+        rubricFrame.getContentPane().setBackground(new Color(188, 86, 86));
 
         headerLabel = new JLabel("", JLabel.CENTER);
 
-        mainFrame.addWindowListener(new WindowAdapter() {
+        rubricFrame.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent windowEvent) {
                 System.exit(0);
             }
@@ -53,11 +47,11 @@ public class rubricBuilder {
         addPanel = new JPanel();
         addPanel.setLayout(new FlowLayout());
 
-        mainFrame.add(headerLabel);
-        mainFrame.add(headerPanel);
-        mainFrame.add(listPanel);
-        mainFrame.add(addPanel);
-        mainFrame.setVisible(true);
+        rubricFrame.add(headerLabel);
+        rubricFrame.add(headerPanel);
+        rubricFrame.add(listPanel);
+        rubricFrame.add(addPanel);
+        rubricFrame.setVisible(true);
     }
 
     private void showRubricEvent() {
@@ -83,13 +77,40 @@ public class rubricBuilder {
         percentHeader.setFont(new Font("Sans Serif", Font.BOLD, 15));
         percentHeader.setForeground(Color.white);
 
-        JButton addButton = new JButton("Add");
+        addButton = new JButton("Add");
+		  createButton = new JButton ("Create class");
 
         addButton.setActionCommand("Add");
-        addButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                listPanel.removeAll();
+        addButton.addActionListener(new ButtonClickListener());
+
+		  createButton.setActionCommand("createClass");
+		  createButton.addActionListener(new ButtonClickListener());
+        
+		  listPanel.setBackground(new Color(188, 86, 86));
+
+        headerPanel.setBackground(new Color(188, 86, 86));
+        headerPanel.add(assignmentHeader);
+        headerPanel.add(new JLabel("            "));
+        headerPanel.add(percentHeader);
+
+
+        addPanel.setBackground(new Color(188, 86, 86));
+        addPanel.add(typeLabel);
+        addPanel.add(typeField);
+        addPanel.add(percentLabel);
+        addPanel.add(percentField);
+        addPanel.add(addButton);
+		  addPanel.add(createButton);
+
+        rubricFrame.setVisible(true);
+    }
+
+	 private class ButtonClickListener implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+         String command = e.getActionCommand();
+
+         if (command.equals("Add")) {
+				listPanel.removeAll();
                 String type = typeField.getText();
                 String percent = percentField.getText();
                 typeField.setText("");
@@ -126,27 +147,14 @@ public class rubricBuilder {
                 listPanel.add(new JLabel("                                  "));
                 listPanel.add(percentPanel);
 
-                mainFrame.setVisible(true);
-            }
-        });
+                rubricFrame.setVisible(true);
+      	}
 
-        listPanel.setBackground(new Color(188, 86, 86));
-
-        headerPanel.setBackground(new Color(188, 86, 86));
-        headerPanel.add(assignmentHeader);
-        headerPanel.add(new JLabel("            "));
-        headerPanel.add(percentHeader);
-
-
-        addPanel.setBackground(new Color(188, 86, 86));
-        addPanel.add(typeLabel);
-        addPanel.add(typeField);
-        addPanel.add(percentLabel);
-        addPanel.add(percentField);
-        addPanel.add(addButton);
-
-        mainFrame.setVisible(true);
-    }
-
+			if (command.equals("createClass")) {
+				GradebookPage GradebookPage = new GradebookPage();
+				rubricFrame.setVisible(false);
+			}
+		}
+	}
 }
 
