@@ -6,10 +6,11 @@ import javax.swing.*;
 
 public class createPage {
 	private JFrame createFrame;
-	private JPanel createPagePanel;
-	private JLabel numberLabel, nameLabel, oldRubricLabel;
+	private JPanel topPanel, fillPanel, buttonPanel, numberPanel, namePanel;
+	private JLabel headerLabel, numberLabel, nameLabel;
 	private JTextField courseNumber, courseName;
-	private JButton newRubricButton;
+	private JButton homeButton, newRubricButton, oldRubricButton;
+	private JComboBox<String> rubricList;
 	
 	public createPage(){
 		createFrameCreation();
@@ -33,29 +34,67 @@ public class createPage {
    }
 
 	private void createPageGUI(){
-		createPagePanel = new JPanel();
-		createPagePanel.setBackground(new Color(188, 86, 86));
+		buttonPanel = new JPanel();
+		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.X_AXIS));
+		topPanel = new JPanel();
+		fillPanel = new JPanel();
+		fillPanel.setLayout(new FlowLayout());
+		numberPanel = new JPanel();
+		numberPanel.setLayout(new BoxLayout(numberPanel, BoxLayout.X_AXIS));
+		namePanel = new JPanel ();
+		namePanel.setLayout(new BoxLayout(namePanel, BoxLayout.X_AXIS));
 
+
+
+		buttonPanel.setBackground(new Color(188, 86, 86));
+		topPanel.setBackground(new Color(188, 86, 86));
+		fillPanel.setBackground(new Color(188, 86, 86));
+		numberPanel.setBackground(new Color(188, 86, 86));
+		namePanel.setBackground(new Color(188, 86, 86));
+
+		headerLabel = new JLabel ("Create a new class");
 		numberLabel = new JLabel("Course #: ");
 		nameLabel = new JLabel("Course Name: ");
+
+		headerLabel.setFont(new Font("Georgia", Font.PLAIN, 38));
+      headerLabel.setForeground(Color.white);
+		numberLabel.setFont(new Font("Sans Serif", Font.PLAIN, 14));
+      numberLabel.setForeground(Color.white);
+		nameLabel.setFont(new Font("Sans Serif", Font.PLAIN, 14));
+      nameLabel.setForeground(Color.white);
 
 		courseNumber = new JTextField(20);
 		courseName = new JTextField(20);
 
 		newRubricButton = new JButton("Create new grading rubric");
-		oldRubricLabel = new JLabel("Work from past rubric");
+		homeButton = new JButton("Home");
+		oldRubricButton = new JButton("Work from past rubric");
+		String [] rubrics =  {"CISC 1600 Computer Science I", "CISC 2200 Data Structures"};
+		rubricList = new JComboBox<>(rubrics);
 
 		newRubricButton.setActionCommand("newRubric");
 		newRubricButton.addActionListener(new ButtonClickListener());
 
-		createPagePanel.add(numberLabel);
-		createPagePanel.add(courseNumber);
-		createPagePanel.add(nameLabel);
-		createPagePanel.add(courseName);
-		createPagePanel.add(newRubricButton);
-		createPagePanel.add(oldRubricLabel);
+		homeButton.setActionCommand("home");
+		homeButton.addActionListener(new ButtonClickListener());
 
-		createFrame.add(createPagePanel);
+		topPanel.add(homeButton);
+		topPanel.add(headerLabel);
+		numberPanel.add(numberLabel);
+		numberPanel.add(courseNumber);
+		namePanel.add(nameLabel);
+		namePanel.add(courseName);
+
+		buttonPanel.add(newRubricButton);
+		buttonPanel.add(oldRubricButton);
+		buttonPanel.add(rubricList);
+
+		fillPanel.add(numberPanel);
+      fillPanel.add(namePanel);
+		fillPanel.add(buttonPanel);
+
+		createFrame.add(fillPanel, BorderLayout.CENTER);
+		createFrame.add(topPanel, BorderLayout.NORTH);
 	}
 
 	private class ButtonClickListener implements ActionListener{
@@ -66,6 +105,11 @@ public class createPage {
 				rubricBuilder RubricBuilder = new rubricBuilder();
             createFrame.setVisible(false);
          }
+
+			if (command.equals("home")) {
+				mainPage returnHome = new mainPage();
+				createFrame.setVisible(false);
+			}
       }
    }
 

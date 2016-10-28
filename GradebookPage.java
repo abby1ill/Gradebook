@@ -3,15 +3,12 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-
-
-
 public class GradebookPage {
 	private JFrame gradebookFrame;
 	private JPanel classNamePanel, tablePanel, controlPanel;
 	private JScrollPane scrollPane;
 	private JTable gradeTable;
-	private JButton addAssignment, deleteAssignment, addStudent, deleteStudent;
+	private JButton homeButton, addAssignment, deleteAssignment, addStudent, deleteStudent;
 	private JLabel classLabel, studentLabel, assignmentLabel;
 
 	public GradebookPage() {
@@ -19,7 +16,6 @@ public class GradebookPage {
    	initGradebook();
    }
     
-
 	private void gradebookFrameCreation() {
       gradebookFrame = new JFrame("Gradebook");
       gradebookFrame.setSize(1000,700);
@@ -39,6 +35,25 @@ public class GradebookPage {
    	tablePanel = new JPanel();
 		controlPanel = new JPanel();	
 		classNamePanel = new JPanel();
+
+		controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
+
+		homeButton = new JButton("Home");
+		addAssignment = new JButton("Add");
+		deleteAssignment = new JButton("Delete");
+		addStudent = new JButton("Add");
+		deleteStudent = new JButton("Delete");
+	
+		homeButton.setActionCommand("home");
+		homeButton.addActionListener(new ButtonClickListener());
+
+		studentLabel = new JLabel("Student: ");
+      studentLabel.setFont(new Font("Georgia", Font.PLAIN, 16));
+      studentLabel.setForeground(Color.white);
+
+		assignmentLabel = new JLabel("Assignment: ");
+		assignmentLabel.setFont(new Font("Georgia", Font.PLAIN, 16));
+      assignmentLabel.setForeground(Color.white);
 
 		classLabel = new JLabel("Class name goes here");
 		classLabel.setFont(new Font("Georgia", Font.PLAIN, 30));
@@ -63,11 +78,30 @@ public class GradebookPage {
 		scrollPane = new JScrollPane(gradeTable);
 		gradeTable.setFillsViewportHeight(true);
 
+		controlPanel.add(studentLabel);
+		controlPanel.add(addStudent);
+		controlPanel.add(deleteStudent);
+		controlPanel.add(assignmentLabel);
+		controlPanel.add(addAssignment);
+		controlPanel.add(deleteAssignment);
+		classNamePanel.add(homeButton);
 		classNamePanel.add(classLabel);
 		tablePanel.add(scrollPane);
 		gradebookFrame.add(classNamePanel, BorderLayout.NORTH);
 		gradebookFrame.add(controlPanel, BorderLayout.WEST);
 		gradebookFrame.add(tablePanel, BorderLayout.CENTER);
    }
+
+	private class ButtonClickListener implements ActionListener{
+      public void actionPerformed(ActionEvent e) {
+         String command = e.getActionCommand();
+
+         if (command.equals("home")) {
+            mainPage Home = new mainPage();
+            gradebookFrame.setVisible(false);
+         }
+      }
+   }
+
 }
 

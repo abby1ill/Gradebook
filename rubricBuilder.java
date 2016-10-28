@@ -151,7 +151,7 @@ public class rubricBuilder {
       	}
 
 			if (command.equals("createClass")) {
-				GradebookPage GradebookPage = new GradebookPage();
+				GradebookPage gradebookPage = new GradebookPage();
 				rubricFrame.setVisible(false);
 			}
 		}

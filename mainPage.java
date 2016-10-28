@@ -17,6 +17,7 @@ public class mainPage {
 	private JLabel semesterLabel, classList;
 	private String[] semesters;
 	private JComboBox<String> semesterList;
+	String semesterDir;
 
 	public mainPage(){
 		mainFrameCreation();
@@ -70,18 +71,19 @@ public class mainPage {
       semesters = getSemesterList();
       semesterList = new JComboBox<>(semesters);
 
-      int size = semesters.length;
-
       classList = new JLabel("Classes: ");
       classList.setFont(new Font("Georgia", Font.PLAIN, 25));
       classList.setForeground(Color.white);
 
-      classButton = new JButton[size];
+     /* classButton = new JButton[size];
+		
+		String [] classes = getClassList();
+		int classListSize = classes.length()
 
-      for (int i=0; i<size; i++) {
+      for (int i=0; i<classListSize; i++) {
          classButton[i] = new JButton("Class " + i);
          classButton[i].setAlignmentX(Component.CENTER_ALIGNMENT);
-      }
+      }*/
 
       classPagePanel.setBackground(new Color(188, 86, 86));
       topPanel.setBackground(new Color(188, 86, 86));
@@ -94,9 +96,9 @@ public class mainPage {
       leftPanel.add(createClass);
       classListPanel.add(classList);
 
-      for (int j=0; j<size; j++) {
+      /*for (int j=0; j<size; j++) {
          classListPanel.add(classButton[j]);
-      }
+      }*/
 
       classPagePanel.add(topPanel, BorderLayout.NORTH);
       classPagePanel.add(leftPanel, BorderLayout.WEST);
@@ -108,7 +110,7 @@ public class mainPage {
 
    private String[] getSemesterList() {
       try {
-         Scanner semesterFile = new Scanner(new File("/Users/abbyoneill/Desktop/Gradebook2/testing.txt"));
+         Scanner semesterFile = new Scanner(new File(new File("semesterList.txt").getAbsolutePath()));
 
          List<String> lines = new ArrayList<String>();
          while (semesterFile.hasNextLine()) {
@@ -132,9 +134,13 @@ public class mainPage {
             
 			if (command.equals("createSemester")) {
 				String newSemester = JOptionPane.showInputDialog(mainFrame, "Enter semester and year: ");
+				semesterDir = newSemester.replaceAll(" ","");
+
+				File dir = new File(new File("semesters/" + semesterDir).getAbsolutePath());
+            dir.mkdirs();
 
             try {
-               File semesterFile = new File("/Users/abbyoneill/Desktop/Gradebook2/testing.txt");
+               File semesterFile = new File(new File("semesterList.txt").getAbsolutePath());
 
                if(!semesterFile.exists()){
                   semesterFile.createNewFile();
@@ -169,4 +175,23 @@ public class mainPage {
 		classPagePanel.setVisible(false);
 		classListPanel.setVisible(false);
 	}
+
+	/*private String[] getClassList(semesterDir) {
+      try {
+         Scanner classFile = new Scanner(new File(new File(semesters/semesterDir/semesterDir + "Classes.txt").getAbsolutePath()));
+
+         List<String> lines = new ArrayList<String>();
+         while (classFile.hasNextLine()) {
+            lines.add(classFile.nextLine());
+         }
+         String[] classList = lines.toArray(new String[0]);
+
+         return classList;
+      }
+      catch (FileNotFoundException ex) {
+         System.out.println(ex.getMessage());
+         return classList;
+      }
+   }*/
+
 }	
