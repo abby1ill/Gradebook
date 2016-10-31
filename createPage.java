@@ -8,7 +8,7 @@ public class createPage {
 	private JFrame createFrame;
 	private JPanel topPanel, fillPanel, buttonPanel, numberPanel, namePanel;
 	private JLabel headerLabel, numberLabel, nameLabel;
-	private JTextField courseNumber, courseName;
+	private JTextField courseNumber, courseNameField;
 	private JButton homeButton, newRubricButton, oldRubricButton;
 	private JComboBox<String> rubricList;
 	
@@ -64,7 +64,7 @@ public class createPage {
       nameLabel.setForeground(Color.white);
 
 		courseNumber = new JTextField(20);
-		courseName = new JTextField(20);
+		courseNameField = new JTextField(20);
 
 		newRubricButton = new JButton("Create new grading rubric");
 		homeButton = new JButton("Home");
@@ -83,7 +83,7 @@ public class createPage {
 		numberPanel.add(numberLabel);
 		numberPanel.add(courseNumber);
 		namePanel.add(nameLabel);
-		namePanel.add(courseName);
+		namePanel.add(courseNameField);
 
 		buttonPanel.add(newRubricButton);
 		buttonPanel.add(oldRubricButton);
@@ -102,6 +102,21 @@ public class createPage {
          String command = e.getActionCommand();
 
          if (command.equals("newRubric")) {
+				String courseNum = courseNumber.getText();
+				String courseName = courseNameField.getText();
+
+            try {
+               FileWriter writer = new FileWriter(mainPage.semesterDir, true);
+
+               BufferedWriter buffer = new BufferedWriter(writer);
+               buffer.write(courseNum + " " + courseName  + "\n");
+               buffer.close();
+            }
+
+            catch(IOException creationError){
+               creationError.printStackTrace();
+            }
+
 				rubricBuilder RubricBuilder = new rubricBuilder();
             createFrame.setVisible(false);
          }

@@ -17,7 +17,8 @@ public class mainPage {
 	private JLabel semesterLabel, classList;
 	private String[] semesters;
 	private JComboBox<String> semesterList;
-	String semesterDir;
+	public static String semesterDir;
+	String selectedSemester;
 
 	public mainPage(){
 		mainFrameCreation();
@@ -70,15 +71,15 @@ public class mainPage {
 
       semesters = getSemesterList();
       semesterList = new JComboBox<>(semesters);
+		semesterList.addActionListener(new ComboBoxListener());
 
       classList = new JLabel("Classes: ");
       classList.setFont(new Font("Georgia", Font.PLAIN, 25));
       classList.setForeground(Color.white);
 
-     /* classButton = new JButton[size];
-		
-		String [] classes = getClassList();
-		int classListSize = classes.length()
+		/*String [] classes = getClassList("Fall 2016");
+		int classListSize = classes.length;
+		classButton = new JButton[classListSize];
 
       for (int i=0; i<classListSize; i++) {
          classButton[i] = new JButton("Class " + i);
@@ -96,13 +97,13 @@ public class mainPage {
       leftPanel.add(createClass);
       classListPanel.add(classList);
 
-      /*for (int j=0; j<size; j++) {
+      /*for (int j=0; j<classListSize; j++) {
          classListPanel.add(classButton[j]);
       }*/
 
       classPagePanel.add(topPanel, BorderLayout.NORTH);
       classPagePanel.add(leftPanel, BorderLayout.WEST);
-      classPagePanel.add(classListPanel, BorderLayout.CENTER);
+      //classPagePanel.add(classListPanel, BorderLayout.CENTER);
       classPagePanel.setVisible(true);
 
       mainFrame.add(classPagePanel);
@@ -138,13 +139,19 @@ public class mainPage {
 
 				File dir = new File(new File("semesters/" + semesterDir).getAbsolutePath());
             dir.mkdirs();
-
+				
             try {
                File semesterFile = new File(new File("semesterList.txt").getAbsolutePath());
+					File classList = new File (dir, semesterDir + "classList.txt");
 
                if(!semesterFile.exists()){
                   semesterFile.createNewFile();
                }
+
+					if(!classList.exists()){
+   	            classList.createNewFile();
+	            }
+
 
                FileWriter writer = new FileWriter(semesterFile.getName(),true);
 
@@ -169,6 +176,17 @@ public class mainPage {
 		}
 	}
 
+	private class ComboBoxListener implements ActionListener{
+      public void actionPerformed(ActionEvent e) {
+			JComboBox box = (JComboBox) e.getSource();
+			selectedSemester = (String)box.getSelectedItem();
+			semesterDir = getSelectedSemester(selectedSemester);
+			//getClassList(semesterDir);
+			//destroyClassPage();
+         //classPageGUI();
+		}
+	}
+
 	private void destroyClassPage() {
 		topPanel.setVisible(false);
 		leftPanel.setVisible(false);
@@ -176,22 +194,28 @@ public class mainPage {
 		classListPanel.setVisible(false);
 	}
 
-	/*private String[] getClassList(semesterDir) {
+	private String getSelectedSemester(String selected) {
+		selected = selected.replaceAll(" ","");
+		String semesterDir = ("semesters/" + selected + "/" + selected + "classList.txt");
+		return semesterDir;
+	}
+
+/*	private String[] getClassList(String semesterDir) {
       try {
-         Scanner classFile = new Scanner(new File(new File(semesters/semesterDir/semesterDir + "Classes.txt").getAbsolutePath()));
+         Scanner classFile = new Scanner(new File(new File(semesterDir).getAbsolutePath()));
 
          List<String> lines = new ArrayList<String>();
          while (classFile.hasNextLine()) {
             lines.add(classFile.nextLine());
          }
-         String[] classList = lines.toArray(new String[0]);
+         String[] listOfClasses = lines.toArray(new String[0]);
 
-         return classList;
+         return listOfClasses;
       }
       catch (FileNotFoundException ex) {
          System.out.println(ex.getMessage());
-         return classList;
+			String[] listOfClasses = {"No classes"};
+         return listOfClasses;
       }
    }*/
-
 }	
