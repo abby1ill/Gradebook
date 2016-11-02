@@ -105,6 +105,9 @@ public class createPage {
 				String courseNum = courseNumber.getText();
 				String courseName = courseNameField.getText();
 
+				String nameAndNum = courseNum + courseNameField;
+				nameAndNum = nameAndNum.replaceAll(" ","");
+
             try {
                FileWriter writer = new FileWriter(mainPage.semesterDir, true);
 

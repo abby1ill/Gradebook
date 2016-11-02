@@ -19,10 +19,15 @@ public class mainPage {
 	private JComboBox<String> semesterList;
 	public static String semesterDir;
 	String selectedSemester;
+	int classListSize;
 
 	public mainPage(){
 		mainFrameCreation();
 		classPageGUI();
+		loadSemesters();
+		if (!"No semesters created".equals(semesters[0])){
+			loadButtons(semesters[0]);
+		}
 	}
 
 	private void mainFrameCreation(){
@@ -39,6 +44,12 @@ public class mainPage {
 
 		mainFrame.setVisible(true);
    }
+
+	private void loadSemesters() {
+		semesters = getSemesterList();
+      semesterList = new JComboBox<>(semesters);
+      semesterList.addActionListener(new ComboBoxListener());
+	}
 
    public void classPageGUI(){
 		classPagePanel = new JPanel();
@@ -181,9 +192,9 @@ public class mainPage {
 			JComboBox box = (JComboBox) e.getSource();
 			selectedSemester = (String)box.getSelectedItem();
 			semesterDir = getSelectedSemester(selectedSemester);
-			//getClassList(semesterDir);
-			//destroyClassPage();
-         //classPageGUI();
+			destroyButtons();
+			classListPanel.setVisible(false);
+			loadButtons(selectedSemester);
 		}
 	}
 
@@ -194,15 +205,45 @@ public class mainPage {
 		classListPanel.setVisible(false);
 	}
 
+	private void destroyButtons() {
+		for (int j=0; j<classListSize; j++) {
+         classListPanel.remove(classButton[j]);
+      }
+	}
+
 	private String getSelectedSemester(String selected) {
 		selected = selected.replaceAll(" ","");
-		String semesterDir = ("semesters/" + selected + "/" + selected + "classList.txt");
+		semesterDir = ("semesters/" + selected + "/" + selected + "classList.txt");
 		return semesterDir;
 	}
 
-/*	private String[] getClassList(String semesterDir) {
+	private void loadButtons(String curSemester) {
+		String [] classes = getClassList(curSemester);
+      classListSize = classes.length;
+      classButton = new JButton[classListSize];
+
+		for (int i = 0; i<classListSize; i++) {
+			System.out.println(classes[i]);
+		}
+
+      for (int i=0; i<classListSize; i++) {
+         classButton[i] = new JButton(classes[i]);
+         classButton[i].setAlignmentX(Component.CENTER_ALIGNMENT);
+      }
+
+		for (int j=0; j<classListSize; j++) {
+         classListPanel.add(classButton[j]);
+      }
+
+		classListPanel.setVisible(true);
+		classPagePanel.add(classListPanel, BorderLayout.CENTER);
+	}
+
+	private String[] getClassList(String semester) {
+		String semesterDirectory = getSelectedSemester(semester);
+
       try {
-         Scanner classFile = new Scanner(new File(new File(semesterDir).getAbsolutePath()));
+         Scanner classFile = new Scanner(new File(semesterDirectory));
 
          List<String> lines = new ArrayList<String>();
          while (classFile.hasNextLine()) {
@@ -212,10 +253,10 @@ public class mainPage {
 
          return listOfClasses;
       }
-      catch (FileNotFoundException ex) {
+      catch (IOException ex) {
          System.out.println(ex.getMessage());
 			String[] listOfClasses = {"No classes"};
          return listOfClasses;
       }
-   }*/
+   }
 }	
