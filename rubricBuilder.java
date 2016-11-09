@@ -1,33 +1,39 @@
-import java.util.ArrayList;
+import java.util.List;
+import java.util.*;
+import java.io.File;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
 public class rubricBuilder {
     private JFrame rubricFrame;
-    private JLabel headerLabel;
-    private JPanel headerPanel;
-    private JPanel listPanel;
-    private JPanel addPanel;
+    private JLabel headerLabel, assignmentHeader, percentHeader;
+    private JPanel addPanel, listPanel, labelPanel, assignmentPanel, percentPanel;
     private JTextField typeField;
-    private JTextField percentField;
 	 private JButton addButton, createButton;
+	 String [] assignmentArray;
+	 String [] percentArray;
 
+    List<String> assignments = new ArrayList<String>();
+    List<String> percents = new ArrayList<String>();
+	 List<JTextField> assignmentField = new ArrayList<JTextField>();
+	 List<JTextField> percentField = new ArrayList<JTextField>();
 
-    ArrayList<JLabel> classes = new ArrayList<>();
-    ArrayList<JLabel> percents = new ArrayList<>();
-
-    String className = new String("CISC 1600"); //hard-coded for now
+    String className = createPage.courseTitle;
 
     public rubricBuilder(){
+		  rubricFrameCreation();
         rubricGUI();
-		  showRubricEvent();
     }
 
-    private void rubricGUI() {
-        rubricFrame = new JFrame("Rubric Builder");
+    private void rubricFrameCreation() {
+        rubricFrame = new JFrame("Gradebook");
         rubricFrame.setSize(1000, 700);
-        rubricFrame.setLayout(new GridLayout(4, 1));
+        rubricFrame.setLayout(new GridLayout(0, 1));
         rubricFrame.getContentPane().setBackground(new Color(188, 86, 86));
 
         headerLabel = new JLabel("", JLabel.CENTER);
@@ -38,123 +44,161 @@ public class rubricBuilder {
             }
         });
 
-        headerPanel = new JPanel();
-        headerPanel.setLayout(new FlowLayout());
+        rubricFrame.setVisible(true);
+	 }
 
-        listPanel = new JPanel();
-        listPanel.setLayout(new FlowLayout());
-
+	 private void rubricGUI(){
         addPanel = new JPanel();
         addPanel.setLayout(new FlowLayout());
 
-        rubricFrame.add(headerLabel);
-        rubricFrame.add(headerPanel);
-        rubricFrame.add(listPanel);
-        rubricFrame.add(addPanel);
-        rubricFrame.setVisible(true);
-    }
+        listPanel = new JPanel();
+        listPanel.setLayout(new GridLayout(0,2));
 
-    private void showRubricEvent() {
+        assignmentPanel = new JPanel();
+        assignmentPanel.setLayout(new BoxLayout(assignmentPanel, BoxLayout.Y_AXIS));
+
+		  percentPanel = new JPanel();
+        percentPanel.setLayout(new BoxLayout(percentPanel, BoxLayout.Y_AXIS));
+
+        rubricFrame.add(headerLabel);
+        rubricFrame.add(listPanel);
+        listPanel.add(assignmentPanel);
+		  listPanel.add(percentPanel);
+		  rubricFrame.add(addPanel);
+        rubricFrame.setVisible(true);
+
         headerLabel.setText(className);
         headerLabel.setFont(new Font("Georgia", Font.PLAIN, 48));
         headerLabel.setForeground(Color.white);
 
-        JLabel typeLabel = new JLabel("Assignment Type: ", JLabel.CENTER);
-        typeLabel.setFont(new Font("Sans Serif", Font.PLAIN, 14));
-        typeLabel.setForeground(Color.white);
-        JLabel percentLabel = new JLabel("Percentage: ", JLabel.CENTER);
-        percentLabel.setFont(new Font("Sans Serif", Font.PLAIN, 14));
-        percentLabel.setForeground(Color.white);
-        typeField = new JTextField(20);
-        percentField = new JTextField(3);
-
-
-        JLabel assignmentHeader = new JLabel("Assignments ", JLabel.CENTER);
+        assignmentHeader = new JLabel("Assignments", SwingConstants.CENTER);
         assignmentHeader.setFont(new Font("Sans Serif", Font.BOLD, 15));
         assignmentHeader.setForeground(Color.white);
 
-        JLabel percentHeader = new JLabel("Percent Worth", JLabel.CENTER);
+        percentHeader = new JLabel("Percent Worth", SwingConstants.CENTER);
         percentHeader.setFont(new Font("Sans Serif", Font.BOLD, 15));
         percentHeader.setForeground(Color.white);
 
-        addButton = new JButton("Add");
 		  createButton = new JButton ("Create class");
-
-        addButton.setActionCommand("Add");
-        addButton.addActionListener(new ButtonClickListener());
+		  addButton = new JButton("Add assignment");
 
 		  createButton.setActionCommand("createClass");
 		  createButton.addActionListener(new ButtonClickListener());
         
+		  addButton.setActionCommand("addAssignment");
+		  addButton.addActionListener(new ButtonClickListener());
+
 		  listPanel.setBackground(new Color(188, 86, 86));
+		  addPanel.setBackground(new Color(188, 86, 86));
+        assignmentPanel.setBackground(new Color(188, 86, 86));
+        percentPanel.setBackground(new Color(188, 86, 86));
+        addPanel.add(createButton);
 
-        headerPanel.setBackground(new Color(188, 86, 86));
-        headerPanel.add(assignmentHeader);
-        headerPanel.add(new JLabel("            "));
-        headerPanel.add(percentHeader);
+		  int numOfFields = getNumOfFields();
 
+		  assignmentPanel.add(assignmentHeader);
+		  percentPanel.add(percentHeader);
 
-        addPanel.setBackground(new Color(188, 86, 86));
-        addPanel.add(typeLabel);
-        addPanel.add(typeField);
-        addPanel.add(percentLabel);
-        addPanel.add(percentField);
-        addPanel.add(addButton);
-		  addPanel.add(createButton);
+        for (int i=0; i<numOfFields; i++) {
+            assignmentField.add(new JTextField(20));
+				assignmentPanel.add(assignmentField.get(i));
+        }
+
+        for (int j=0; j<numOfFields; j++) {
+            percentField.add(new JTextField(3));
+				percentPanel.add(percentField.get(j));
+        }
 
         rubricFrame.setVisible(true);
     }
+
+	 private int getNumOfFields() {
+	     int assignNum = Integer.parseInt(JOptionPane.showInputDialog(rubricFrame, "How many assignments will students be graded on?"));
+
+		  return assignNum;
+	 }	
 
 	 private class ButtonClickListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
          String command = e.getActionCommand();
 
-         if (command.equals("Add")) {
-				listPanel.removeAll();
-                String type = typeField.getText();
-                String percent = percentField.getText();
-                typeField.setText("");
-                percentField.setText("");
-
-                JLabel assignmentLabel_1 = new JLabel(type, JLabel.CENTER);
-                assignmentLabel_1.setFont(new Font("Sans Serif", Font.PLAIN, 14));
-                assignmentLabel_1.setForeground(Color.white);
-
-                JLabel percentLabel_2 = new JLabel(percent, JLabel.CENTER);
-                percentLabel_2.setFont(new Font("Sans Serif", Font.PLAIN, 14));
-                percentLabel_2.setForeground(Color.white);
-
-                classes.add(assignmentLabel_1);
-                percents.add(percentLabel_2);
-
-                JPanel assignmentPanel = new JPanel();
-                assignmentPanel.setLayout(new GridLayout(classes.size(), 0));
-
-                JPanel percentPanel = new JPanel();
-                percentPanel.setLayout(new GridLayout(percents.size(), 0));
-
-                assignmentPanel.setBackground(new Color(188, 86, 86));
-                for(JLabel assign : classes) {
-                    assignmentPanel.add(assign);
-                }
-
-                percentPanel.setBackground(new Color(188, 86, 86));
-                for(JLabel percent1 : percents) {
-                    percentPanel.add(percent1);
-                }
-
-                listPanel.add(assignmentPanel);
-                listPanel.add(new JLabel("                                  "));
-                listPanel.add(percentPanel);
-
-                rubricFrame.setVisible(true);
-      	}
-
 			if (command.equals("createClass")) {
-				GradebookPage gradebookPage = new GradebookPage();
-				rubricFrame.setVisible(false);
-			}
-		}
-	}
-}
+				boolean percentageCheck = verifyPercentages();
 
+				if (percentageCheck) {
+					writeRubricFile();
+					GradebookPage gradebookPage = new GradebookPage();
+					rubricFrame.setVisible(false);
+				}
+				else {
+					JOptionPane.showMessageDialog(rubricFrame, "Percentages must add to 100%", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		 }
+	 }
+
+    private void writeRubricFile() {
+		 int numOfAssign = assignmentField.size();
+		 String rubricDir = mainPage.selectedSemester.replaceAll(" ", "");
+   	 File dir = new File("rubrics/" + rubricDir);
+		 dir.mkdirs();
+
+		 try {
+		 	String rubricName = mainPage.selectedSemester + " : " + className;
+			String classRubric = className.replaceAll(" ", "");
+
+			File rubricList = new File ("rubrics/rubricList.txt");
+			File rubricFile = new File (dir, classRubric + "Rubric.txt");
+
+			if(!rubricList.exists()) {
+				rubricList.createNewFile();
+			}
+
+			FileWriter listWriter = new FileWriter(rubricList.getAbsolutePath(), true);
+			BufferedWriter listBuffer = new BufferedWriter(listWriter);
+
+			listBuffer.write(rubricName + "\n");
+			listBuffer.close();
+
+			if(!rubricFile.exists()) {
+				rubricFile.createNewFile();
+			}
+
+			FileWriter writer = new FileWriter(rubricFile.getAbsolutePath(), true);
+			BufferedWriter buffer = new BufferedWriter(writer);
+
+			for (int k=0; k<numOfAssign; k++) {
+				buffer.write(assignmentArray[k] + "," + percentArray[k] + "\n");
+			}
+			buffer.close();
+	 	}
+
+	 	catch(IOException creationError){
+         creationError.printStackTrace();
+     	}
+	 }
+
+	 private boolean verifyPercentages() {
+		 int numOfAssign = assignmentField.size();
+  
+       assignmentArray = new String[numOfAssign];
+       percentArray = new String[numOfAssign];
+
+       for (int i=0; i<numOfAssign; i++) {
+           assignmentArray[i] = (assignmentField.get(i)).getText();
+           percentArray[i] = (percentField.get(i)).getText();
+       }
+
+		 int total = 0;
+
+	 	 for (int i=0; i<numOfAssign; i++) {
+			 int percentage = Integer.parseInt(percentArray[i]);
+		    total += percentage;
+		 }
+
+		 if (total == 100)
+		    return true;
+		 else
+          return false;
+	 }
+}

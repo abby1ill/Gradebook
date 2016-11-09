@@ -18,7 +18,7 @@ public class mainPage {
 	private String[] semesters;
 	private JComboBox<String> semesterList;
 	public static String semesterDir;
-	String selectedSemester;
+	public static String selectedSemester;
 	int classListSize;
 
 	public mainPage(){
@@ -27,6 +27,7 @@ public class mainPage {
 		loadSemesters();
 		if (!"No semesters created".equals(semesters[0])){
 			loadButtons(semesters[0]);
+			semesterList.setSelectedItem(semesters[0]);
 		}
 	}
 
@@ -88,15 +89,6 @@ public class mainPage {
       classList.setFont(new Font("Georgia", Font.PLAIN, 25));
       classList.setForeground(Color.white);
 
-		/*String [] classes = getClassList("Fall 2016");
-		int classListSize = classes.length;
-		classButton = new JButton[classListSize];
-
-      for (int i=0; i<classListSize; i++) {
-         classButton[i] = new JButton("Class " + i);
-         classButton[i].setAlignmentX(Component.CENTER_ALIGNMENT);
-      }*/
-
       classPagePanel.setBackground(new Color(188, 86, 86));
       topPanel.setBackground(new Color(188, 86, 86));
       leftPanel.setBackground(new Color(188, 86, 86));
@@ -108,13 +100,8 @@ public class mainPage {
       leftPanel.add(createClass);
       classListPanel.add(classList);
 
-      /*for (int j=0; j<classListSize; j++) {
-         classListPanel.add(classButton[j]);
-      }*/
-
       classPagePanel.add(topPanel, BorderLayout.NORTH);
       classPagePanel.add(leftPanel, BorderLayout.WEST);
-      //classPagePanel.add(classListPanel, BorderLayout.CENTER);
       classPagePanel.setVisible(true);
 
       mainFrame.add(classPagePanel);

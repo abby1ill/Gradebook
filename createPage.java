@@ -1,3 +1,4 @@
+import java.util.List;
 import java.util.*;
 import java.io.*;
 import java.awt.*;
@@ -11,6 +12,7 @@ public class createPage {
 	private JTextField courseNumber, courseNameField;
 	private JButton homeButton, newRubricButton, oldRubricButton;
 	private JComboBox<String> rubricList;
+	public static String courseTitle, selectedRubric;
 	
 	public createPage(){
 		createFrameCreation();
@@ -69,11 +71,14 @@ public class createPage {
 		newRubricButton = new JButton("Create new grading rubric");
 		homeButton = new JButton("Home");
 		oldRubricButton = new JButton("Work from past rubric");
-		String [] rubrics =  {"CISC 1600 Computer Science I", "CISC 2200 Data Structures"};
+		String [] rubrics = getRubricList();
 		rubricList = new JComboBox<>(rubrics);
 
 		newRubricButton.setActionCommand("newRubric");
 		newRubricButton.addActionListener(new ButtonClickListener());
+
+		oldRubricButton.setActionCommand("pastRubric");
+		oldRubricButton.addActionListener(new ButtonClickListener());
 
 		homeButton.setActionCommand("home");
 		homeButton.addActionListener(new ButtonClickListener());
@@ -101,11 +106,13 @@ public class createPage {
       public void actionPerformed(ActionEvent e) {
          String command = e.getActionCommand();
 
-         if (command.equals("newRubric")) {
-				String courseNum = courseNumber.getText();
-				String courseName = courseNameField.getText();
+			String courseNum = courseNumber.getText();
+         String courseName = courseNameField.getText();
 
-				String nameAndNum = courseNum + courseNameField;
+         courseTitle = courseNum + " " + courseName;
+
+         if (command.equals("newRubric")) {
+				String nameAndNum = courseNum + courseName;
 				nameAndNum = nameAndNum.replaceAll(" ","");
 
             try {
@@ -124,10 +131,42 @@ public class createPage {
             createFrame.setVisible(false);
          }
 
+			if (command.equals("pastRubric")) {
+				pastRubric PastRubric = new pastRubric();
+				createFrame.setVisible(false);
+			}
+
 			if (command.equals("home")) {
 				mainPage returnHome = new mainPage();
 				createFrame.setVisible(false);
 			}
+      }
+   }
+
+	private class ComboBoxListener implements ActionListener{
+      public void actionPerformed(ActionEvent e) {
+         JComboBox box = (JComboBox) e.getSource();
+         selectedRubric = (String)box.getSelectedItem();
+      }
+   }
+
+	private String[] getRubricList() {
+      try {
+         Scanner rubricsFile = new Scanner(new File("rubrics/rubricList.txt"));
+
+         List<String> lines = new ArrayList<String>();
+         while (rubricsFile.hasNextLine()) {
+            lines.add(rubricsFile.nextLine());
+         }
+         String[] rubrics = lines.toArray(new String[0]);
+
+         return rubrics;
+      }
+      catch (FileNotFoundException ex) {
+         System.out.println(ex.getMessage());
+         String[] rubrics = { "No rubrics created" };
+
+         return rubrics;
       }
    }
 
