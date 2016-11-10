@@ -73,6 +73,7 @@ public class createPage {
 		oldRubricButton = new JButton("Work from past rubric");
 		String [] rubrics = getRubricList();
 		rubricList = new JComboBox<>(rubrics);
+      rubricList.addActionListener(new ComboBoxListener());
 
 		newRubricButton.setActionCommand("newRubric");
 		newRubricButton.addActionListener(new ButtonClickListener());
@@ -132,6 +133,21 @@ public class createPage {
          }
 
 			if (command.equals("pastRubric")) {
+				String nameAndNum = courseNum + courseName;
+            nameAndNum = nameAndNum.replaceAll(" ","");
+
+            try {
+               FileWriter writer = new FileWriter(mainPage.semesterDir, true);
+
+               BufferedWriter buffer = new BufferedWriter(writer);
+               buffer.write(courseNum + " " + courseName  + "\n");
+               buffer.close();
+            }
+
+            catch(IOException creationError){
+               creationError.printStackTrace();
+            }
+		
 				pastRubric PastRubric = new pastRubric();
 				createFrame.setVisible(false);
 			}
