@@ -28,8 +28,8 @@ public class GradebookGUI extends JFrame{
         private JScrollPane scrollPane;
         private JTable gradeTable, gt;
         private JLabel classLabel, studentLabel, assignmentLabel;
+		  private JButton homeButton;
 		  String className = createPage.courseTitle;
-	//private GradebookClass gradebook;	
 	private int numAssignment; 
 	public int selectedRow = 0;		
 	private int totalRows;
@@ -180,8 +180,11 @@ nameList = new JComboBox();
                 classLabel.setFont(new Font("Georgia", Font.PLAIN, 30));
                 classLabel.setForeground(Color.white);
 
-
-                tablePanel.setBackground(new Color(188, 86, 86));
+					homeButton = new JButton("Home");
+					homeButton.setActionCommand("home");
+					homeButton.addActionListener(new ButtonClickListener());
+               
+					 tablePanel.setBackground(new Color(188, 86, 86));
                 controlPanel.setBackground(new Color(188, 86, 86));
 
 
@@ -251,6 +254,7 @@ System.out.println(numRows);
                 gradeTable.setFillsViewportHeight(true);
 
                 classNamePanel.add(classLabel);
+					 classNamePanel.add(homeButton);
                 tablePanel.add(scrollPane);
 
                 gradebookFrame.add(classNamePanel, BorderLayout.WEST);
@@ -346,10 +350,14 @@ System.out.println(numRows);
 
 
 	public class ButtonClickListener implements ActionListener{
-                public void actionPerformed(ActionEvent e){
-                        String command = e.getActionCommand();
-
-                        if(command.equals("AddStudent")){
+   	public void actionPerformed(ActionEvent e){
+      	String command = e.getActionCommand();
+				if (command.equals("home")) {
+					// call save rubric function here
+					mainPage Home = new mainPage();
+					gradebookFrame.setVisible(false);
+				}					
+            if(command.equals("AddStudent")){
 
 				((DefaultTableModel)gradeTable.getModel()).addRow(new Object[]{"","","",""});
 			}
