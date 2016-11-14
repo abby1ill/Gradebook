@@ -102,7 +102,7 @@ nameList = new JComboBox();
 
       		calculateTab.setText("Calculate");
        	 	calculateTab.add(studentAverage);
-        	studentAverage.setActionCommand("Student Grades");
+        	studentAverage.setActionCommand("StudentAverage");
         	studentAverage.addActionListener(new ButtonClickListener());
 
         	calculateTab.add(assignmentAverage);
@@ -413,23 +413,23 @@ saveButton.setActionCommand("saveRemoveButton");
 			}
 
 			if (command.equals("AssignmentAverage")){
-			int rowsCount = gradeTable.getRowCount();
-			int colCount = gradeTable.getColumnCount();
+				int rowsCount = gradeTable.getRowCount();
+				int colCount = gradeTable.getColumnCount();
 				Object[] av;
 				av =  new Object[gradeTable.getColumnCount()];
 				for (int j = 0; j < colCount; j++){
       				  int sum = 0;
 				 
-				if (j <3)
-					av[j] = "";
-				else{
-      				for(int i = 0; i < rowsCount-1; i++){
-        			    sum = sum+Integer.parseInt(gradeTable.getValueAt(i, j).toString());
-       				}
-      				  float average = sum/rowsCount;
-			 	  av[j] = average;
-			     	}
-				 }
+					if (j <3)
+						av[j] = "";
+					else{
+      				for(int i = 0; i < rowsCount; i++){
+        					sum += Integer.parseInt(gradeTable.getValueAt(i, j).toString());
+       			}
+      		   float average = sum/rowsCount;
+			 	   av[j] = average;
+			   }
+			}
 
 
 				
