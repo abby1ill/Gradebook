@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.lang.Object;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.lang.Object;
@@ -54,8 +55,9 @@ public class GradebookGUI extends JFrame{
 
 
  //       public static String[][] content;
-        public static String [] columnNames = {"ID", "Last Name", "First Name", "Absent Days", "Assignment 1"};
-	  
+		  public Assignments [] assignmentArr = setAssignments();
+		  public String [] columnNames = getColumns(assignmentArr);
+
 //	private Object[] columnNames;
 	private ArrayList<Object> col;
 
@@ -74,6 +76,9 @@ public class GradebookGUI extends JFrame{
                 gradebookFrame.setLayout(new BorderLayout(5,5));
                 gradebookFrame.getContentPane().setBackground(new Color(188, 86, 86));
 
+					for (int k=0; k<columnNames.length; k++) {
+           System.out.println(columnNames[k]);
+         }
 
                	MenuBar = new JMenuBar();
                 fileTab = new JMenu();
@@ -240,15 +245,15 @@ System.out.println(numRows);
             gradeTable.setModel(new DefaultTableModel(content,columnNames));
       
 //			setWidthAsPercentages(gradeTable, 0.05, 0.20, 0.25, 0.25, 0.25);
-            		System.out.println(gradeTable.getModel().getValueAt(1, 1));
+//            		System.out.println(gradeTable.getModel().getValueAt(1, 1));
 
         	} catch (Exception ex) {
             		ex.printStackTrace();
         	}
 
-		gradeTable.getColumn("ID").setCellRenderer(new ButtonRenderer());
-    		gradeTable.getColumn("ID").setCellEditor(
-        	new ButtonEditor(new JCheckBox()));
+//		gradeTable.getColumn("ID").setCellRenderer(new ButtonRenderer());
+//    		gradeTable.getColumn("ID").setCellEditor(
+//        	new ButtonEditor(new JCheckBox()));
 
                 scrollPane = new JScrollPane(gradeTable);
                 gradeTable.setFillsViewportHeight(true);
@@ -438,6 +443,59 @@ saveButton.setActionCommand("saveRemoveButton");
 
 		}
 	}
+	private Assignments[] setAssignments() {
+      String [] rubric = getRubric();
+      int len = rubric.length;
+
+      Assignments[] assignmentArr = new Assignments[len];
+      String [] assignments = new String[len];
+      String [] percentages = new String[len];
+      int [] percents = new int[len];
+
+      for (int i=0; i<len; i++) {
+         String [] splitArr = rubric[i].split(",");
+         assignments[i] = splitArr[0];
+         percentages[i] = splitArr[1];
+      }
+
+      for (int j=0; j<len; j++) {
+         percents[j] = Integer.parseInt(percentages[j]);
+         assignmentArr[j] = new Assignments(assignments[j], percents[j]);
+      }
+
+      return assignmentArr;
+   }
+
+	public String[] getColumns (Assignments[] assignArr) {
+		int len = assignArr.length;
+
+		String[] columns = new String[len];
+
+		for (int i=0; i<len; i++) {
+ 			columns[i] = assignArr[i].getAssignment();
+		}
+		return columns;
+	}
+
+   private String[] getRubric() {
+      try {
+         Scanner rubricFile = new Scanner(new File(mainPage.RubricFP));
+
+         List<String> lines = new ArrayList<String>();
+         while (rubricFile.hasNextLine()) {
+            lines.add(rubricFile.nextLine());
+         }
+         String[] rubric = lines.toArray(new String[0]);
+
+         return rubric;
+      }
+      catch (IOException ex) {
+         System.out.println(ex.getMessage());
+         String[] rubric = { "" };
+
+         return rubric;
+      }
+   }
 }
 
 class ButtonRenderer extends JButton implements TableCellRenderer {
@@ -511,7 +569,7 @@ class ButtonEditor extends DefaultCellEditor {
 	protected void fireEditingStopped() {
     	super.fireEditingStopped();
   	}
-
+}
 
 /*
  public void exportTable(JTable table, File file) throws IOException {
@@ -532,4 +590,3 @@ class ButtonEditor extends DefaultCellEditor {
         System.out.println("write out to: " + file);
     }*/
 
-}

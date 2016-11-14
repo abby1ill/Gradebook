@@ -20,7 +20,7 @@ public class mainPage {
 	private JComboBox<String> semesterList;
 	public static String semesterDir;
 	public static String selectedSemester;
-	public static String GradebookFP = "";
+	public static String GradebookFP, RubricFP;
 	int classListSize;
 
 	public mainPage(){
@@ -181,6 +181,7 @@ public class mainPage {
 					String semDir = selectedSemester.replaceAll(" ","");
 
 					GradebookFP = "semesters/" + semDir + "/" + courseName + ".csv";
+					RubricFP = "rubrics/" + semDir + "/" + courseName + "Rubric.txt";
 
 					GradebookGUI gradePage = new GradebookGUI();
 					mainFrame.setVisible(false);
