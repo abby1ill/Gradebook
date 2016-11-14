@@ -1,4 +1,4 @@
-mport java.util.Arrays;
+import java.util.Arrays;
 import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -29,8 +29,9 @@ public class GradebookGUI extends JFrame{
         private JTable gradeTable, gt;
         private JLabel classLabel, studentLabel, assignmentLabel;
 	private GradebookClass gradebook;	
-	private int totalRows; 
+	private int numAssignment; 
 	public int selectedRow = 0;		
+	private int totalRows;
 
 	private ArrayList <Grades> grades;
         private ArrayList<Student> students;
@@ -51,12 +52,11 @@ public class GradebookGUI extends JFrame{
 	public JComboBox nameList;
 
 
-
-	//NOW in gradebook class
-	//Used in grade table, needs to be changed to open a file
-        public static String[][] content;
+ //       public static String[][] content;
         public static String [] columnNames = {"ID", "Last Name", "First Name", "Absent Days", "Assignment 1"};
-
+	  
+//	private Object[] columnNames;
+	private ArrayList<Object> col;
 
 
         public GradebookGUI() {
@@ -209,10 +209,11 @@ nameList = new JComboBox();
 
  	           	content = new String[elements.size()][numRows];
         	   	TableCellRenderer buttonRenderer = new ButtonRenderer();
-
-           		for (int i =0; i<numRows; i++){
+	
+			for (int i =0; i<numRows; i++){
                 		content[i][0] = elements.get(i)[0];
         		}
+
 
 System.out.println(elements.size());
 System.out.println(numRows);
@@ -225,9 +226,10 @@ System.out.println(numRows);
 
 			totalRows = elements.size();
 
-			initGradeBook(content);
-                
-			setWidthAsPercentages(gradeTable, 0.05, 0.20, 0.25, 0.25, 0.25);
+	//		initGradeBook(content);
+            gradeTable.setModel(new DefaultTableModel(content,columnNames));
+      
+//			setWidthAsPercentages(gradeTable, 0.05, 0.20, 0.25, 0.25, 0.25);
             		System.out.println(gradeTable.getModel().getValueAt(1, 1));
 
         	} catch (Exception ex) {
@@ -250,8 +252,9 @@ System.out.println(numRows);
         }
 
 
+/*
 	public void initGradeBook(String [][] c){
-
+//		initColumns();
 		students = new ArrayList<Student>();
                         grades = new ArrayList<Grades>();
 
@@ -275,8 +278,54 @@ System.out.println(numRows);
 
 
                         gradeTable.setModel(new DefaultTableModel(c,columnNames));
-	}
- 
+	}*/
+
+
+///INIT COLUMNS 
+/*	private void initColumns(){
+               try{
+
+	BufferedReader br = new BufferedReader(new FileReader(new File("/Users/mauraodonnell/cols.csv")));
+                        List<String[]> elements = new ArrayList<String[]>();
+                        String line = null;
+			numAssignment = 0;
+                        while((line = br.readLine())!=null) {
+                                String[] splitted = line.split(",");
+                                elements.add(splitted);
+                                numAssignment++;
+                        }
+                        br.close();
+
+                 //       content = new String[elements.size()][numRows];
+
+                        TableCellRenderer buttonRenderer = new ButtonRenderer();
+
+			col = new ArrayList<Object>();
+
+                        for (int i =0; i<numAssignment; i++){
+                                col.add(elements.get(i)[0]);
+                        }
+
+			System.out.println(elements.size());
+			System.out.println(col);
+                        for(int i=0; i<numRows-1; i++) {
+                                for (int j = 0; j<elements.size()-1; j++){
+                                        content[i][j] = elements.get(i)[j];
+                                }
+                        }
+			columnNames = new Object[col.size()];
+			col = col.toArray(columnNames);
+			  System.out.println(columnNames);
+
+                        totalRows = elements.size();
+			
+	
+                } catch (Exception ex) {
+                        ex.printStackTrace();
+                }
+
+	}*/
+
 
 	private static void setWidthAsPercentages(JTable table, double... percentages) {
     		final double factor = 10000;
@@ -344,35 +393,31 @@ saveButton.setActionCommand("saveRemoveButton");
 
 				// changeStudentFrame.setVisible(false);
 			}
+
 			if (command.equals("AssignmentAverage")){
 			int rowsCount = gradeTable.getRowCount();
+			int colCount = gradeTable.getColumnCount();
+				Object[] av;
+				av =  new Object[gradeTable.getColumnCount()];
+				for (int j = 0; j < colCount; j++){
       				  int sum = 0;
-
+				 
+				if (j <3)
+					av[j] = "";
+				else{
       				for(int i = 0; i < rowsCount-1; i++){
-        			    sum = sum+Integer.parseInt(gradeTable.getValueAt(i, 3).toString());
+        			    sum = sum+Integer.parseInt(gradeTable.getValueAt(i, j).toString());
        				}
-		//	 float sum = getSum();
-		//	        int rowsCount = gradeTable.getRowCount();
       				  float average = sum/rowsCount;
-       				// return average;
-		//		float average = sum/rowsCount;
+			 	  av[j] = average;
+			     	}
+				 }
 
 
-		/*		Object[] av;
-				av = new Object[gradeTable.getColumnCount()];
-				String
-				for (int i = 0; i<gradeTable.getRowCount(); i++){
-					if (i == 0)
-						Object[i] = "Average";
-					if (i == 1 || i == 2)
-						Object[i] = "";
-					if (i>2)
-						for (int j = 3; j<gradeTable.getRowCount(); j++)
-							
 				
-				}*/
+((DefaultTableModel)gradeTable.getModel()).addRow(av);
 
-				((DefaultTableModel)gradeTable.getModel()).addRow(new Object[]{"","","",average});
+			//	((DefaultTableModel)gradeTable.getModel()).addRow(new Object[]{"","","",average});
                         
 			}	
 
@@ -451,4 +496,25 @@ class ButtonEditor extends DefaultCellEditor {
 	protected void fireEditingStopped() {
     	super.fireEditingStopped();
   	}
+
+
+/*
+ public void exportTable(JTable table, File file) throws IOException {
+        TableModel model = table.getModel();
+        FileWriter out = new FileWriter(file);
+        
+        for(int i=0; i < model.getColumnCount(); i++) {
+            out.write(model.getColumnName(i) + "\t");
+        }
+        out.write("\n");
+        for(int i=0; i< model.getRowCount(); i++) {
+            for(int j=0; j < model.getColumnCount(); j++) {
+                out.write(model.getValueAt(i,j).toString()+"\t");
+            }
+            out.write("\n");
+        }
+        out.close();
+        System.out.println("write out to: " + file);
+    }*/
+
 }
