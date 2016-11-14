@@ -16,9 +16,11 @@ public class mainPage {
 	private JButton[] classButton;
 	private JLabel semesterLabel, classList;
 	private String[] semesters;
+	private String[] classes;
 	private JComboBox<String> semesterList;
 	public static String semesterDir;
 	public static String selectedSemester;
+	public static String GradebookFP = "";
 	int classListSize;
 
 	public mainPage(){
@@ -171,6 +173,19 @@ public class mainPage {
 				createPage CreatePage = new createPage();			
 				mainFrame.setVisible(false);
 			}
+
+			for (int i=0; i<classListSize; i++) {
+				if (command.equals(classes[i])) {
+					createPage.courseTitle = classes[i];
+					String courseName = classes[i].replaceAll(" ","");
+					String semDir = selectedSemester.replaceAll(" ","");
+
+					GradebookFP = "semesters/" + semDir + "/" + courseName + ".csv";
+
+					GradebookGUI gradePage = new GradebookGUI();
+					mainFrame.setVisible(false);
+				}
+			}
 		}
 	}
 
@@ -205,17 +220,15 @@ public class mainPage {
 	}
 
 	private void loadButtons(String curSemester) {
-		String [] classes = getClassList(curSemester);
+		classes = getClassList(curSemester);
       classListSize = classes.length;
       classButton = new JButton[classListSize];
-
-		for (int i = 0; i<classListSize; i++) {
-			System.out.println(classes[i]);
-		}
 
       for (int i=0; i<classListSize; i++) {
          classButton[i] = new JButton(classes[i]);
          classButton[i].setAlignmentX(Component.CENTER_ALIGNMENT);
+			classButton[i].setActionCommand(classes[i]);
+		   classButton[i].addActionListener(new ButtonClickListener());
       }
 
 		for (int j=0; j<classListSize; j++) {

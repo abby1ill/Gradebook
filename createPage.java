@@ -109,13 +109,13 @@ public class createPage {
 
 			String courseNum = courseNumber.getText();
          String courseName = courseNameField.getText();
-
+			String curSem = (mainPage.selectedSemester).replaceAll(" ","");
          courseTitle = courseNum + " " + courseName;
 
          if (command.equals("newRubric")) {
 				String nameAndNum = courseNum + courseName;
 				nameAndNum = nameAndNum.replaceAll(" ","");
-
+				mainPage.GradebookFP = "semesters/" + curSem + "/" + nameAndNum + ".csv";
             try {
                FileWriter writer = new FileWriter(mainPage.semesterDir, true);
 
@@ -135,6 +135,7 @@ public class createPage {
 			if (command.equals("pastRubric")) {
 				String nameAndNum = courseNum + courseName;
             nameAndNum = nameAndNum.replaceAll(" ","");
+            mainPage.GradebookFP = "semesters/" + curSem + "/" + nameAndNum + ".csv";
 
             try {
                FileWriter writer = new FileWriter(mainPage.semesterDir, true);

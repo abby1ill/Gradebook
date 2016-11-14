@@ -150,7 +150,7 @@ public class pastRubric {
 
             if (percentageCheck) {
                writeRubricFile();
-               GradebookPage gradebookPage = new GradebookPage();
+               GradebookGUI gradebookPage = new GradebookGUI();
                pastFrame.setVisible(false);
             }
             else {
