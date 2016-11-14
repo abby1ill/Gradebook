@@ -14,20 +14,24 @@ public class rubricBuilder {
     private JLabel headerLabel, assignmentHeader, percentHeader;
     private JPanel addPanel, listPanel, labelPanel, assignmentPanel, percentPanel;
     private JTextField typeField;
-	 private JButton addButton, createButton;
-	 String [] assignmentArray;
-	 String [] percentArray;
+    private JButton addButton, createButton;
+    String [] assignmentArray;
+    String [] percentArray;
 
     List<String> assignments = new ArrayList<String>();
     List<String> percents = new ArrayList<String>();
-	 List<JTextField> assignmentField = new ArrayList<JTextField>();
-	 List<JTextField> percentField = new ArrayList<JTextField>();
+    List<JTextField> assignmentField = new ArrayList<JTextField>();
+    List<JTextField> percentField = new ArrayList<JTextField>();
 
     String className = createPage.courseTitle;
 
     public rubricBuilder(){
-		  rubricFrameCreation();
+        rubricFrameCreation();
         rubricGUI();
+    }
+
+    public static void main(String[] args){
+        rubricBuilder RubricBuilder = new rubricBuilder();
     }
 
     private void rubricFrameCreation() {
@@ -45,9 +49,9 @@ public class rubricBuilder {
         });
 
         rubricFrame.setVisible(true);
-	 }
+    }
 
-	 private void rubricGUI(){
+    private void rubricGUI(){
         addPanel = new JPanel();
         addPanel.setLayout(new FlowLayout());
 
@@ -57,14 +61,14 @@ public class rubricBuilder {
         assignmentPanel = new JPanel();
         assignmentPanel.setLayout(new BoxLayout(assignmentPanel, BoxLayout.Y_AXIS));
 
-		  percentPanel = new JPanel();
+        percentPanel = new JPanel();
         percentPanel.setLayout(new BoxLayout(percentPanel, BoxLayout.Y_AXIS));
 
         rubricFrame.add(headerLabel);
         rubricFrame.add(listPanel);
         listPanel.add(assignmentPanel);
-		  listPanel.add(percentPanel);
-		  rubricFrame.add(addPanel);
+        listPanel.add(percentPanel);
+        rubricFrame.add(addPanel);
         rubricFrame.setVisible(true);
 
         headerLabel.setText(className);
@@ -79,126 +83,143 @@ public class rubricBuilder {
         percentHeader.setFont(new Font("Sans Serif", Font.BOLD, 15));
         percentHeader.setForeground(Color.white);
 
-		  createButton = new JButton ("Create class");
-		  addButton = new JButton("Add assignment");
+        createButton = new JButton ("Create class");
+        addButton = new JButton("Add assignment");
 
-		  createButton.setActionCommand("createClass");
-		  createButton.addActionListener(new ButtonClickListener());
-        
-		  addButton.setActionCommand("addAssignment");
-		  addButton.addActionListener(new ButtonClickListener());
+        createButton.setActionCommand("createClass");
+        createButton.addActionListener(new ButtonClickListener());
 
-		  listPanel.setBackground(new Color(188, 86, 86));
-		  addPanel.setBackground(new Color(188, 86, 86));
+        addButton.setActionCommand("addAssignment");
+        addButton.addActionListener(new ButtonClickListener());
+
+        listPanel.setBackground(new Color(188, 86, 86));
+        addPanel.setBackground(new Color(188, 86, 86));
         assignmentPanel.setBackground(new Color(188, 86, 86));
         percentPanel.setBackground(new Color(188, 86, 86));
         addPanel.add(createButton);
 
-		  int numOfFields = getNumOfFields();
+        int numOfFields = getNumOfFields();
 
-		  assignmentPanel.add(assignmentHeader);
-		  percentPanel.add(percentHeader);
+        assignmentPanel.add(assignmentHeader);
+        percentPanel.add(percentHeader);
 
         for (int i=0; i<numOfFields; i++) {
             assignmentField.add(new JTextField(20));
-				assignmentPanel.add(assignmentField.get(i));
+            assignmentPanel.add(assignmentField.get(i));
         }
 
         for (int j=0; j<numOfFields; j++) {
             percentField.add(new JTextField(3));
-				percentPanel.add(percentField.get(j));
+            percentPanel.add(percentField.get(j));
         }
 
         rubricFrame.setVisible(true);
     }
 
-	 private int getNumOfFields() {
-	     int assignNum = Integer.parseInt(JOptionPane.showInputDialog(rubricFrame, "How many assignments will students be graded on?"));
+    private int getNumOfFields() {
+        int assignNum = Integer.parseInt(JOptionPane.showInputDialog(rubricFrame, "How many assignments will students be graded on?"));
 
-		  return assignNum;
-	 }	
+        return assignNum;
+    }
 
-	 private class ButtonClickListener implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-         String command = e.getActionCommand();
+    private class ButtonClickListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            String command = e.getActionCommand();
 
-			if (command.equals("createClass")) {
-				boolean percentageCheck = verifyPercentages();
+            if (command.equals("createClass")) {
 
-				if (percentageCheck) {
-					writeRubricFile();
-					GradebookPage gradebookPage = new GradebookPage();
-					rubricFrame.setVisible(false);
-				}
-				else {
-					JOptionPane.showMessageDialog(rubricFrame, "Percentages must add to 100%", "Error", JOptionPane.ERROR_MESSAGE);
-				}
-			}
-		 }
-	 }
+                boolean emptyFieldCheck = emptyFields();
+
+                if(!emptyFieldCheck)
+                    JOptionPane.showMessageDialog(rubricFrame, "All fields must be filled", "Error", JOptionPane.ERROR_MESSAGE);
+
+                boolean percentageCheck = verifyPercentages();
+
+                if (percentageCheck) {
+                    //writeRubricFile();
+                    //GradebookPage gradebookPage = new GradebookPage();
+                    rubricFrame.setVisible(false);
+                }
+                else {
+                    JOptionPane.showMessageDialog(rubricFrame, "Percentages must add to 100%", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+    }
 
     private void writeRubricFile() {
-		 int numOfAssign = assignmentField.size();
-		 String rubricDir = mainPage.selectedSemester.replaceAll(" ", "");
-   	 File dir = new File("rubrics/" + rubricDir);
-		 dir.mkdirs();
+        int numOfAssign = assignmentField.size();
+        String rubricDir = mainPage.selectedSemester.replaceAll(" ", "");
+        File dir = new File("rubrics/" + rubricDir);
+        dir.mkdirs();
 
-		 try {
-		 	String rubricName = mainPage.selectedSemester + " : " + className;
-			String classRubric = className.replaceAll(" ", "");
+        try {
+            String rubricName = mainPage.selectedSemester + " : " + className;
+            String classRubric = className.replaceAll(" ", "");
 
-			File rubricList = new File ("rubrics/rubricList.txt");
-			File rubricFile = new File (dir, classRubric + "Rubric.txt");
+            File rubricList = new File ("rubrics/rubricList.txt");
+            File rubricFile = new File (dir, classRubric + "Rubric.txt");
 
-			if(!rubricList.exists()) {
-				rubricList.createNewFile();
-			}
+            if(!rubricList.exists()) {
+                rubricList.createNewFile();
+            }
 
-			FileWriter listWriter = new FileWriter(rubricList.getAbsolutePath(), true);
-			BufferedWriter listBuffer = new BufferedWriter(listWriter);
+            FileWriter listWriter = new FileWriter(rubricList.getAbsolutePath(), true);
+            BufferedWriter listBuffer = new BufferedWriter(listWriter);
 
-			listBuffer.write(rubricName + "\n");
-			listBuffer.close();
+            listBuffer.write(rubricName + "\n");
+            listBuffer.close();
 
-			if(!rubricFile.exists()) {
-				rubricFile.createNewFile();
-			}
+            if(!rubricFile.exists()) {
+                rubricFile.createNewFile();
+            }
 
-			FileWriter writer = new FileWriter(rubricFile.getAbsolutePath(), true);
-			BufferedWriter buffer = new BufferedWriter(writer);
+            FileWriter writer = new FileWriter(rubricFile.getAbsolutePath(), true);
+            BufferedWriter buffer = new BufferedWriter(writer);
 
-			for (int k=0; k<numOfAssign; k++) {
-				buffer.write(assignmentArray[k] + "," + percentArray[k] + "\n");
-			}
-			buffer.close();
-	 	}
+            for (int k=0; k<numOfAssign; k++) {
+                buffer.write(assignmentArray[k] + "," + percentArray[k] + "\n");
+            }
+            buffer.close();
+        }
 
-	 	catch(IOException creationError){
-         creationError.printStackTrace();
-     	}
-	 }
+        catch(IOException creationError){
+            creationError.printStackTrace();
+        }
+    }
 
-	 private boolean verifyPercentages() {
-		 int numOfAssign = assignmentField.size();
-  
-       assignmentArray = new String[numOfAssign];
-       percentArray = new String[numOfAssign];
+    private boolean verifyPercentages() {
+        int numOfAssign = assignmentField.size();
 
-       for (int i=0; i<numOfAssign; i++) {
-           assignmentArray[i] = (assignmentField.get(i)).getText();
-           percentArray[i] = (percentField.get(i)).getText();
-       }
+        assignmentArray = new String[numOfAssign];
+        percentArray = new String[numOfAssign];
 
-		 int total = 0;
+        for (int i=0; i<numOfAssign; i++) {
+            assignmentArray[i] = (assignmentField.get(i)).getText();
+            percentArray[i] = (percentField.get(i)).getText();
+        }
 
-	 	 for (int i=0; i<numOfAssign; i++) {
-			 int percentage = Integer.parseInt(percentArray[i]);
-		    total += percentage;
-		 }
+        int total = 0;
 
-		 if (total == 100)
-		    return true;
-		 else
-          return false;
-	 }
+        for (int i=0; i<numOfAssign; i++) {
+            int percentage = Integer.parseInt(percentArray[i]);
+            total += percentage;
+        }
+
+        if (total == 100)
+            return true;
+        else
+            return false;
+    }
+
+    private boolean emptyFields() {
+        
+        int numOfAssign = assignmentField.size();
+
+        for (int i=0; i<numOfAssign; i++) {
+            if((assignmentField.get(i)).getText().equals("") || (percentField.get(i)).getText().equals(""))
+                return(false);
+        }
+        return(true);
+    }
 }
