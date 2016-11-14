@@ -425,22 +425,39 @@ saveButton.setActionCommand("saveRemoveButton");
 					else{
       				for(int i = 0; i < rowsCount; i++){
         					sum += Integer.parseInt(gradeTable.getValueAt(i, j).toString());
-       			}
-      		   float average = sum/rowsCount;
-			 	   av[j] = average;
-			   }
+       				}
+      		   	float average = sum/rowsCount;
+			 	   	av[j] = average;
+			   	}
+				}
+				
+				((DefaultTableModel)gradeTable.getModel()).addRow(av);
 			}
 
+			if (command.equals("StudentAverage")){
+				int rowCount = gradeTable.getRowCount();
+				int colCount = gradeTable.getColumnCount();
 
-				
-((DefaultTableModel)gradeTable.getModel()).addRow(av);
+				Object [] studentAvg;
+				studentAvg = new Object[rowCount];
 
-			//	((DefaultTableModel)gradeTable.getModel()).addRow(new Object[]{"","","",average});
-                        
+				for (int i=0; i<rowCount; i++) {
+					float average = 0;
+					for (int j=3; j<colCount; j++) {
+						int percentage = (assignmentArr[j-3].getPercentage());
+						double weight = ((double) percentage)/100;
+						int grade = Integer.parseInt(gradeTable.getValueAt(i, j).toString());
+						double weightGrade = weight * grade;
+						average += weightGrade;
+					}
+					studentAvg[i] = average;
+				}
+
+				((DefaultTableModel)gradeTable.getModel()).addColumn("Student Average", studentAvg);
 			}	
-
 		}
 	}
+
 	private Assignments[] setAssignments() {
       String [] rubric = getRubric();
       int len = rubric.length;
