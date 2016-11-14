@@ -76,10 +76,6 @@ public class GradebookGUI extends JFrame{
                 gradebookFrame.setLayout(new BorderLayout(5,5));
                 gradebookFrame.getContentPane().setBackground(new Color(188, 86, 86));
 
-					for (int k=0; k<columnNames.length; k++) {
-           System.out.println(columnNames[k]);
-         }
-
                	MenuBar = new JMenuBar();
                 fileTab = new JMenu();
                 editTab = new JMenu();
@@ -200,6 +196,7 @@ nameList = new JComboBox();
 
         	gradeTable = new JTable (new DefaultTableModel());
 
+					 classNamePanel.setLayout(new BoxLayout(classNamePanel, BoxLayout.Y_AXIS));
                 classNamePanel.setBackground(new Color(188, 86, 86));
 			
 		//Opens cvs file
@@ -258,8 +255,9 @@ System.out.println(numRows);
                 scrollPane = new JScrollPane(gradeTable);
                 gradeTable.setFillsViewportHeight(true);
 
-                classNamePanel.add(classLabel);
+//                classNamePanel.add(classLabel);
 					 classNamePanel.add(homeButton);
+					 classNamePanel.add(classLabel);
                 tablePanel.add(scrollPane);
 
                 gradebookFrame.add(classNamePanel, BorderLayout.WEST);
@@ -369,7 +367,7 @@ System.out.println(numRows);
 
 
                      	  if (command.equals("RemoveStudent")){
-                                changeStudentFrame = new JFrame("Add Student");
+                                changeStudentFrame = new JFrame("Remove Student");
                                 changeStudentFrame.setSize(200,200);
                                 changeStudentFrame.setLayout(new BorderLayout(5,5));
                                 //create an array that has a list of student names
@@ -467,12 +465,16 @@ saveButton.setActionCommand("saveRemoveButton");
    }
 
 	public String[] getColumns (Assignments[] assignArr) {
-		int len = assignArr.length;
+		int len = assignArr.length+3;
 
 		String[] columns = new String[len];
 
-		for (int i=0; i<len; i++) {
- 			columns[i] = assignArr[i].getAssignment();
+		columns[0] = "ID";
+		columns[1] = "Last Name";
+		columns[2] = "First Name";
+
+		for (int i=3; i<len; i++) {
+ 			columns[i] = assignArr[i-3].getAssignment();
 		}
 		return columns;
 	}
