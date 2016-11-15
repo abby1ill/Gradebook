@@ -106,6 +106,7 @@ public class createPage {
 	private class ButtonClickListener implements ActionListener{
       public void actionPerformed(ActionEvent e) {
          String command = e.getActionCommand();
+			boolean emptyFieldCheck = emptyFields();
 
 			String courseNum = courseNumber.getText();
          String courseName = courseNameField.getText();
@@ -113,46 +114,58 @@ public class createPage {
          courseTitle = courseNum + " " + courseName;
 
          if (command.equals("newRubric")) {
-				String nameAndNum = courseNum + courseName;
-				nameAndNum = nameAndNum.replaceAll(" ","");
-				mainPage.GradebookFP = "semesters/" + curSem + "/" + nameAndNum + ".csv";
-				mainPage.RubricFP = "rubrics/" + curSem + "/" + nameAndNum + "Rubric.txt";
+			
+				if (emptyFieldCheck) {
+					String nameAndNum = courseNum + courseName;
+					nameAndNum = nameAndNum.replaceAll(" ","");
+					mainPage.GradebookFP = "semesters/" + curSem + "/" + nameAndNum + ".csv";
+					mainPage.RubricFP = "rubrics/" + curSem + "/" + nameAndNum + "Rubric.txt";
 
-            try {
-               FileWriter writer = new FileWriter(mainPage.semesterDir, true);
+            	try {
+               	FileWriter writer = new FileWriter(mainPage.semesterDir, true);
 
-               BufferedWriter buffer = new BufferedWriter(writer);
-               buffer.write(courseNum + " " + courseName  + "\n");
-               buffer.close();
-            }
+               	BufferedWriter buffer = new BufferedWriter(writer);
+               	buffer.write(courseNum + " " + courseName  + "\n");
+               	buffer.close();
+            	}
 
-            catch(IOException creationError){
-               creationError.printStackTrace();
-            }
+            	catch(IOException creationError){
+               	creationError.printStackTrace();
+            	}
 
-				rubricBuilder RubricBuilder = new rubricBuilder();
-            createFrame.setVisible(false);
+					rubricBuilder RubricBuilder = new rubricBuilder();
+            	createFrame.setVisible(false);
+				}
+				else {
+					JOptionPane.showMessageDialog(createFrame, "All fields must be filled", "Error", JOptionPane.ERROR_MESSAGE);
+				}
          }
 
 			if (command.equals("pastRubric")) {
-				String nameAndNum = courseNum + courseName;
-            nameAndNum = nameAndNum.replaceAll(" ","");
-            mainPage.GradebookFP = "semesters/" + curSem + "/" + nameAndNum + ".csv";
+				if (emptyFieldCheck) {
+					String nameAndNum = courseNum + courseName;
+            	nameAndNum = nameAndNum.replaceAll(" ","");
+            	mainPage.GradebookFP = "semesters/" + curSem + "/" + nameAndNum + ".csv";
+			      mainPage.RubricFP = "rubrics/" + curSem + "/" + nameAndNum + "Rubric.txt";
 
-            try {
-               FileWriter writer = new FileWriter(mainPage.semesterDir, true);
+            	try {
+               	FileWriter writer = new FileWriter(mainPage.semesterDir, true);
 
-               BufferedWriter buffer = new BufferedWriter(writer);
-               buffer.write(courseNum + " " + courseName  + "\n");
-               buffer.close();
-            }
+               	BufferedWriter buffer = new BufferedWriter(writer);
+               	buffer.write(courseNum + " " + courseName  + "\n");
+               	buffer.close();
+            	}
 
-            catch(IOException creationError){
-               creationError.printStackTrace();
-            }
+            	catch(IOException creationError){
+               	creationError.printStackTrace();
+            	}
 		
-				pastRubric PastRubric = new pastRubric();
-				createFrame.setVisible(false);
+					pastRubric PastRubric = new pastRubric();
+					createFrame.setVisible(false);
+				}
+			}
+			else {
+				JOptionPane.showMessageDialog(createFrame, "All fields must be filled", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 
 			if (command.equals("home")) {
@@ -189,4 +202,10 @@ public class createPage {
       }
    }
 
+	private boolean emptyFields() {     
+   	if(courseNumber.getText().equals("") || courseNameField.getText().equals("")) {
+			return(false);
+		}
+		return(true);
+	}
 }
