@@ -35,7 +35,8 @@ public class GradebookGUI extends JFrame{
 	public int selectedRow = 0;		
 	private int totalRows;
  	private DefaultTableModel modeltable;
-
+	boolean sAvg = false;
+	boolean aAvg = false;
   	private ArrayList<String> points;
         private int numColumns, numRows;
 
@@ -45,7 +46,6 @@ public class GradebookGUI extends JFrame{
         private JMenuBar MenuBar;
         private JMenuItem Edit_Student_ChangeTab, Edit_Student_AddTab, Edit_Student_RemoveTab;
         private JMenuItem Edit_Assignment_ChangeTab, Edit_Assignment_AddTab, Edit_Assignment_RemoveTab;
-	private JMenuItem File_SaveTab;
         private JRadioButtonMenuItem studentAverage, assignmentAverage, finalAverage;
 
         public JTextField FNameEdit, LNameEdit, IDEdit;
@@ -91,18 +91,15 @@ public class GradebookGUI extends JFrame{
                 Edit_Assignment_ChangeTab = new JMenuItem();
                 Edit_Assignment_AddTab = new JMenuItem();
                 Edit_Assignment_RemoveTab = new JMenuItem();
-                File_SaveTab = new JMenuItem();		
+		
 
 		assignmentList = new JComboBox();
 		nameList = new JComboBox();
 		assignmentAddList = new JComboBox();	
 			
                 fileTab.setText("File");
-                File_SaveTab.setText("Save");
-                fileTab.add(File_SaveTab);
-		File_SaveTab.setActionCommand("FileSave");
-		File_SaveTab.addActionListener(new ButtonClickListener());
-              	MenuBar.add(fileTab);
+
+               MenuBar.add(fileTab);
 
                 editTab.setText("Edit");
                 editTab.add(Edit_StudentTab);
@@ -352,12 +349,7 @@ System.out.println(numRows);
 					// call save rubric function here
 					mainPage Home = new mainPage();
 					gradebookFrame.setVisible(false);
-				}	
-		if( command.equals("FileSave")){
-			
-		
-		}
-		
+				}					
             	if(command.equals("AddStudent")){
 
 				((DefaultTableModel)gradeTable.getModel()).addRow(new Object[]{"","","",""});
@@ -552,8 +544,13 @@ System.out.println(numRows);
 
 
 			if (command.equals("AssignmentAverage")){
+				aAvg = true;
+
 				int rowsCount = gradeTable.getRowCount();
 				int colCount = gradeTable.getColumnCount();
+
+				if (sAvg)
+					colCount = colCount-1;
 				Object[] av;
 				av =  new Object[gradeTable.getColumnCount()];
 				for (int j = 0; j < colCount; j++){
@@ -574,8 +571,12 @@ System.out.println(numRows);
 			}
 
 			if (command.equals("StudentAverage")){
+				sAvg = true;
 				int rowCount = gradeTable.getRowCount();
 				int colCount = gradeTable.getColumnCount();
+
+				if (aAvg)
+					rowCount = rowCount-1;
 
 				Object [] studentAvg;
 				studentAvg = new Object[rowCount];
