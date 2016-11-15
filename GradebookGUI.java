@@ -34,9 +34,8 @@ public class GradebookGUI extends JFrame{
 	private int numAssignment; 
 	public int selectedRow = 0;		
 	private int totalRows;
+ 	private DefaultTableModel modeltable;
 
-	private ArrayList <Grades> grades;
-        private ArrayList<Student> students;
   	private ArrayList<String> points;
         private int numColumns, numRows;
 
@@ -51,7 +50,7 @@ public class GradebookGUI extends JFrame{
         public JTextField FNameEdit, LNameEdit, IDEdit;
         public JFrame changeStudentFrame;
 
-	public JComboBox nameList;
+	public JComboBox nameList, assignmentList, assignmentAddList;
 
 
  //       public static String[][] content;
@@ -92,9 +91,13 @@ public class GradebookGUI extends JFrame{
                 Edit_Assignment_AddTab = new JMenuItem();
                 Edit_Assignment_RemoveTab = new JMenuItem();
 		
-nameList = new JComboBox();
 
+		assignmentList = new JComboBox();
+		nameList = new JComboBox();
+		assignmentAddList = new JComboBox();	
+			
                 fileTab.setText("File");
+
                MenuBar.add(fileTab);
 
                 editTab.setText("Edit");
@@ -271,13 +274,10 @@ System.out.println(numRows);
 //		initColumns();
 		students = new ArrayList<Student>();
                         grades = new ArrayList<Grades>();
-
                         for(int i= 0; i<numRows-1; i++){
                                 Student s = new Student(c[i][2], c[i][1], c[i][0]);
                                 students.add(s);
                         }
-
-
                         for (int k = 3; k < totalRows-1; k++){
                                         points = new ArrayList<String>();
                                           for (int j = 0; j<totalRows-1; j++){
@@ -287,10 +287,7 @@ System.out.println(numRows);
                                         }
                                         Grades g = new Grades(null, null, points);
                                         grades.add(g);
-
                         }
-
-
                         gradeTable.setModel(new DefaultTableModel(c,columnNames));
 	}*/
 
@@ -298,7 +295,6 @@ System.out.println(numRows);
 ///INIT COLUMNS 
 /*	private void initColumns(){
                try{
-
 	BufferedReader br = new BufferedReader(new FileReader(new File("/Users/mauraodonnell/cols.csv")));
                         List<String[]> elements = new ArrayList<String[]>();
                         String line = null;
@@ -309,17 +305,12 @@ System.out.println(numRows);
                                 numAssignment++;
                         }
                         br.close();
-
                  //       content = new String[elements.size()][numRows];
-
                         TableCellRenderer buttonRenderer = new ButtonRenderer();
-
 			col = new ArrayList<Object>();
-
                         for (int i =0; i<numAssignment; i++){
                                 col.add(elements.get(i)[0]);
                         }
-
 			System.out.println(elements.size());
 			System.out.println(col);
                         for(int i=0; i<numRows-1; i++) {
@@ -330,14 +321,12 @@ System.out.println(numRows);
 			columnNames = new Object[col.size()];
 			col = col.toArray(columnNames);
 			  System.out.println(columnNames);
-
                         totalRows = elements.size();
 			
 	
                 } catch (Exception ex) {
                         ex.printStackTrace();
                 }
-
 	}*/
 
 
@@ -360,10 +349,61 @@ System.out.println(numRows);
 					mainPage Home = new mainPage();
 					gradebookFrame.setVisible(false);
 				}					
-            if(command.equals("AddStudent")){
+            	if(command.equals("AddStudent")){
 
 				((DefaultTableModel)gradeTable.getModel()).addRow(new Object[]{"","","",""});
 			}
+
+		if (command.equals("AddAssignment")){
+			changeStudentFrame = new JFrame("Remove Assignment");
+                                changeStudentFrame.setSize(200,200);
+                                changeStudentFrame.setLayout(new BorderLayout(5,5));
+                                //create an array that has a list of student names
+
+				assignmentAddList = new JComboBox();
+
+                                   JButton saveButton = new JButton("save");
+
+
+                          //      System.out.println(gradeTable.getModel().getValueAt(0, 2));
+
+                                 System.out.println("THISS");
+                                System.out.println(gradeTable.getColumnName(3));
+
+                                Object [] list;
+
+                                int column = gradeTable.getColumnCount() - 3;
+                                list = new Object[column];
+
+                                for (int i = 0; i< column; i++){
+                                        //System.out.println(gradeTable.getModel().getValueAt(i,2));
+                                        list[i] = gradeTable.getColumnName(i+3);//getModel().getValueAt(2,i);
+
+                                        assignmentAddList.addItem(list[i]);
+
+                                }
+
+
+                                saveButton.setActionCommand("saveAddAssignmentButton");
+                                saveButton.addActionListener(new ButtonClickListener());
+
+//
+                                System.out.println(nameList.getSelectedItem());
+                                changeStudentFrame.add(assignmentAddList,BorderLayout.NORTH);
+                                changeStudentFrame.add(saveButton, BorderLayout.SOUTH);
+                                  changeStudentFrame.setVisible(true);
+	                //    ((DefaultTableModel)gradeTable.getModel()).addColumn(new Object[]{"Assignment"});
+                        }
+
+		if (command.equals("saveAddAssignmentButton")){
+				int col = gradeTable.getColumnCount();
+                               int columnIndex= 0;
+                                        for (int i = 0; i< col; i++){
+                                        if (assignmentAddList.getSelectedItem() == gradeTable.getModel().getColumnName(i))                                          columnIndex = i;
+                                }
+				((DefaultTableModel)gradeTable.getModel()).addColumn(assignmentAddList.getSelectedItem());
+		}
+
 
 
                      	  if (command.equals("RemoveStudent")){
@@ -375,6 +415,7 @@ System.out.println(numRows);
                            
                                    JButton saveButton = new JButton("save");
 
+		nameList = new JComboBox();
  			
 				System.out.println(gradeTable.getModel().getValueAt(0, 2));
 
@@ -389,11 +430,11 @@ System.out.println(numRows);
 
                                 }                
 
-saveButton.setActionCommand("saveRemoveButton");
+				saveButton.setActionCommand("saveRemoveButton");
                                 saveButton.addActionListener(new ButtonClickListener());
 				
 
- System.out.println(nameList.getSelectedItem());
+				 System.out.println(nameList.getSelectedItem());
 				changeStudentFrame.add(nameList,BorderLayout.NORTH);
                                 changeStudentFrame.add(saveButton, BorderLayout.SOUTH);
                                   changeStudentFrame.setVisible(true);
@@ -411,6 +452,95 @@ saveButton.setActionCommand("saveRemoveButton");
 
 				// changeStudentFrame.setVisible(false);
 			}
+
+                        if (command.equals("RemoveAssignment")){
+                                changeStudentFrame = new JFrame("Remove Assignment");
+                                changeStudentFrame.setSize(200,200);
+                                changeStudentFrame.setLayout(new BorderLayout(5,5));
+                                //create an array that has a list of student names
+
+	//		assignmentList = new JComboBox();			
+
+                                   JButton saveButton = new JButton("save");
+
+
+                          //      System.out.println(gradeTable.getModel().getValueAt(0, 2));
+
+				 System.out.println("THISS");
+                                System.out.println(gradeTable.getColumnName(3));
+
+                                Object [] list;
+
+                                int column = gradeTable.getColumnCount() - 3;
+                                list = new Object[column];
+
+                                for (int i = 0; i< column; i++){
+                                        //System.out.println(gradeTable.getModel().getValueAt(i,2));
+                                        list[i] = gradeTable.getColumnName(i+3);//getModel().getValueAt(2,i);
+
+                                        assignmentList.addItem(list[i]);
+
+                                }
+
+
+                                saveButton.setActionCommand("saveRemoveAssignment");
+                                saveButton.addActionListener(new ButtonClickListener());
+
+//
+                                System.out.println(nameList.getSelectedItem());
+                                changeStudentFrame.add(assignmentList,BorderLayout.NORTH);
+                                changeStudentFrame.add(saveButton, BorderLayout.SOUTH);
+                                  changeStudentFrame.setVisible(true);
+
+
+                        }
+
+                        if(command.equals("saveRemoveAssignment")){
+
+//System.out.println(assignmentList.getSelectedItem());
+                                int col = gradeTable.getColumnCount();
+                               int columnIndex= 0;
+					for (int i = 0; i< col; i++){
+                                        if (assignmentList.getSelectedItem() == gradeTable.getModel().getColumnName(i))
+                                          columnIndex = i;
+                                }
+
+                                String[] identifiers = new String[gradeTable.getColumnCount() - 1];
+                                int k = 0;
+                                for(int i = 0; i < gradeTable.getColumnCount(); i++) {
+                                	if(i != columnIndex) {
+                                        	identifiers[k++] = gradeTable.getColumnName(i);
+                                	}
+                                }
+
+
+//                              TableColumn tcol = gradeTable.getColumnModel().getColumn(selectedColumn);
+//                              gradeTable.getColumnModel().removeColumn
+//                              ((DefaultTableModel)gradeTable.getModel()).removeColumn(selectedColumn);
+
+
+                                String[][] data = new String[gradeTable.getRowCount()][gradeTable.getColumnCount() - 1];
+                                for(int i = 0; i < gradeTable.getRowCount(); i++) {
+                                        for(int j = 0; j < gradeTable.getColumnCount(); j++) {
+                                                if(j != columnIndex) {
+                                                        if(gradeTable.getValueAt(i, j) == null) {
+                                                                gradeTable.setValueAt("", i, j);
+                                                        }
+                                                        if(j < columnIndex) {
+                                                                data[i][j] = gradeTable.getValueAt(i, j).toString();
+                                                        } else {
+                                                                data[i][j - 1] = gradeTable.getValueAt(i, j).toString();
+                                                        }
+                                                }
+                                        }
+                                }
+                                modeltable = new DefaultTableModel(data, identifiers);
+                                gradeTable.setModel(modeltable);
+
+                                // changeStudentFrame.setVisible(false);
+                        }
+
+
 
 			if (command.equals("AssignmentAverage")){
 				int rowsCount = gradeTable.getRowCount();
@@ -608,4 +738,3 @@ class ButtonEditor extends DefaultCellEditor {
         out.close();
         System.out.println("write out to: " + file);
     }*/
-
