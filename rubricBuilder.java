@@ -124,6 +124,11 @@ public class rubricBuilder {
 
 			if (command.equals("createClass")) {
 				boolean percentageCheck = verifyPercentages();
+	
+				boolean emptyFieldCheck = emptyFields();
+ 
+            if(!emptyFieldCheck)
+               JOptionPane.showMessageDialog(rubricFrame, "All fields must be filled", "Error", JOptionPane.ERROR_MESSAGE);
 
 				if (percentageCheck) {
 					writeRubricFile();
@@ -201,4 +206,14 @@ public class rubricBuilder {
 		 else
           return false;
 	 }
+
+	 private boolean emptyFields() {        
+       int numOfAssign = assignmentField.size();
+ 
+       for (int i=0; i<numOfAssign; i++) {
+          if((assignmentField.get(i)).getText().equals("") || (percentField.get(i)).getText().equals(""))
+          return(false);
+       }
+       return(true);
+    }
 }
