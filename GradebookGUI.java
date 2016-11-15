@@ -44,9 +44,9 @@ public class GradebookGUI extends JFrame{
     private JMenu fileTab, editTab, calculateTab, Edit_StudentTab;
     private JMenu Edit_AssignmentTab;
     private JMenuBar MenuBar;
-    private JMenuItem Edit_Student_ChangeTab, Edit_Student_AddTab, Edit_Student_RemoveTab;
-    private JMenuItem Edit_Assignment_ChangeTab, Edit_Assignment_AddTab, Edit_Assignment_RemoveTab;
-	 private JMenuItem File_SaveTab;
+    private JMenuItem Edit_Student_AddTab, Edit_Student_RemoveTab;
+    private JMenuItem Edit_Assignment_AddTab, Edit_Assignment_RemoveTab;
+    private JMenuItem File_SaveTab;
     private JRadioButtonMenuItem studentAverage, assignmentAverage, finalAverage;
 
     public JTextField FNameEdit, LNameEdit, IDEdit;
@@ -55,16 +55,15 @@ public class GradebookGUI extends JFrame{
     public JComboBox nameList, assignmentList, assignmentAddList;
 
 
-    //       public static String[][] content;
     public Assignments [] assignmentArr = setAssignments();
     public String [] columnNames = getColumns(assignmentArr);
 
-    //	private Object[] columnNames;
     private ArrayList<Object> col;
 
 
     public GradebookGUI() {
         gradebookFrameCreation();
+
         initGradebook();
         numRows = 0;
     }
@@ -85,14 +84,12 @@ public class GradebookGUI extends JFrame{
         assignmentAverage = new JRadioButtonMenuItem();
         finalAverage = new JRadioButtonMenuItem();
         Edit_StudentTab = new JMenu();
-        Edit_Student_ChangeTab = new JMenuItem();
         Edit_Student_AddTab = new JMenuItem();
         Edit_Student_RemoveTab = new JMenuItem();
         Edit_AssignmentTab = new JMenu();
-        Edit_Assignment_ChangeTab = new JMenuItem();
         Edit_Assignment_AddTab = new JMenuItem();
         Edit_Assignment_RemoveTab = new JMenuItem();
-		  File_SaveTab = new JMenuItem();
+        File_SaveTab = new JMenuItem();
 
         assignmentList = new JComboBox();
         nameList = new JComboBox();
@@ -132,11 +129,7 @@ public class GradebookGUI extends JFrame{
 
         Edit_StudentTab.setText("Student");
 
-        //Edit_Student_ChangeTab.setText("Change");
-        //Edit_StudentTab.add(Edit_Student_ChangeTab);
 
-        //Edit_Student_ChangeTab.setActionCommand("ChangeStudent");
-        //Edit_Student_ChangeTab.addActionListener(new ButtonClickListener());
 
         Edit_Student_AddTab.setText("Add");
         Edit_StudentTab.add(Edit_Student_AddTab);
@@ -149,11 +142,6 @@ public class GradebookGUI extends JFrame{
         Edit_Student_RemoveTab.addActionListener(new ButtonClickListener());
 
         Edit_AssignmentTab.setText("Assignment");
-
-        Edit_Assignment_ChangeTab.setText("Change");
-        Edit_AssignmentTab.add(Edit_Assignment_ChangeTab);
-        Edit_Assignment_ChangeTab.setActionCommand("ChangeAssignment");
-        Edit_Assignment_ChangeTab.addActionListener(new ButtonClickListener());
 
         Edit_Assignment_AddTab.setText("Add");
         Edit_AssignmentTab.add(Edit_Assignment_AddTab);
@@ -249,7 +237,6 @@ public class GradebookGUI extends JFrame{
 
             totalRows = elements.size();
 
-            //		initGradeBook(content);
             gradeTable.setModel(new DefaultTableModel(content,columnNames));
 
 //			setWidthAsPercentages(gradeTable, 0.05, 0.20, 0.25, 0.25, 0.25);
@@ -277,65 +264,6 @@ public class GradebookGUI extends JFrame{
     }
 
 
-/*
-	public void initGradeBook(String [][] c){
-//		initColumns();
-		students = new ArrayList<Student>();
-                        grades = new ArrayList<Grades>();
-                        for(int i= 0; i<numRows-1; i++){
-                                Student s = new Student(c[i][2], c[i][1], c[i][0]);
-                                students.add(s);
-                        }
-                        for (int k = 3; k < totalRows-1; k++){
-                                        points = new ArrayList<String>();
-                                          for (int j = 0; j<totalRows-1; j++){
-                                                for(int i=0; i<numRows-1; i++) {
-                                                        points.add(c[i][j]);
-                                                }
-                                        }
-                                        Grades g = new Grades(null, null, points);
-                                        grades.add(g);
-                        }
-                        gradeTable.setModel(new DefaultTableModel(c,columnNames));
-	}*/
-
-
-///INIT COLUMNS
-/*	private void initColumns(){
-               try{
-	BufferedReader br = new BufferedReader(new FileReader(new File("/Users/mauraodonnell/cols.csv")));
-                        List<String[]> elements = new ArrayList<String[]>();
-                        String line = null;
-			numAssignment = 0;
-                        while((line = br.readLine())!=null) {
-                                String[] splitted = line.split(",");
-                                elements.add(splitted);
-                                numAssignment++;
-                        }
-                        br.close();
-                 //       content = new String[elements.size()][numRows];
-                        TableCellRenderer buttonRenderer = new ButtonRenderer();
-			col = new ArrayList<Object>();
-                        for (int i =0; i<numAssignment; i++){
-                                col.add(elements.get(i)[0]);
-                        }
-			System.out.println(elements.size());
-			System.out.println(col);
-                        for(int i=0; i<numRows-1; i++) {
-                                for (int j = 0; j<elements.size()-1; j++){
-                                        content[i][j] = elements.get(i)[j];
-                                }
-                        }
-			columnNames = new Object[col.size()];
-			col = col.toArray(columnNames);
-			  System.out.println(columnNames);
-                        totalRows = elements.size();
-                } catch (Exception ex) {
-                        ex.printStackTrace();
-                }
-	}*/
-
-
     private static void setWidthAsPercentages(JTable table, double... percentages) {
         final double factor = 10000;
 
@@ -356,9 +284,9 @@ public class GradebookGUI extends JFrame{
                 gradebookFrame.setVisible(false);
             }
 
-				if (command.equals("FileSave")){
-					writeGradebookFile();
-				}
+	   if (command.equals("FileSave")){
+			writeGradebookFile();
+	   }
 
             if(command.equals("AddStudent")){
 
@@ -366,7 +294,7 @@ public class GradebookGUI extends JFrame{
             }
 
             if (command.equals("AddAssignment")){
-                changeStudentFrame = new JFrame("Remove Assignment");
+                changeStudentFrame = new JFrame("Add Assignment");
                 changeStudentFrame.setSize(200,200);
                 changeStudentFrame.setLayout(new BorderLayout(5,5));
                 //create an array that has a list of student names
@@ -375,11 +303,6 @@ public class GradebookGUI extends JFrame{
 
                 JButton saveButton = new JButton("save");
 
-
-                //      System.out.println(gradeTable.getModel().getValueAt(0, 2));
-
-                System.out.println("THISS");
-                System.out.println(gradeTable.getColumnName(3));
 
                 Object [] list;
 
@@ -398,12 +321,9 @@ public class GradebookGUI extends JFrame{
                 saveButton.setActionCommand("saveAddAssignmentButton");
                 saveButton.addActionListener(new ButtonClickListener());
 
-//
-                System.out.println(nameList.getSelectedItem());
                 changeStudentFrame.add(assignmentAddList,BorderLayout.NORTH);
                 changeStudentFrame.add(saveButton, BorderLayout.SOUTH);
                 changeStudentFrame.setVisible(true);
-                //    ((DefaultTableModel)gradeTable.getModel()).addColumn(new Object[]{"Assignment"});
             }
 
             if (command.equals("saveAddAssignmentButton")){
@@ -461,24 +381,18 @@ public class GradebookGUI extends JFrame{
 
                 ((DefaultTableModel)gradeTable.getModel()).removeRow(selectedRow);
 
-                // changeStudentFrame.setVisible(false);
             }
 
             if (command.equals("RemoveAssignment")){
                 changeStudentFrame = new JFrame("Remove Assignment");
-                changeStudentFrame.setSize(200,200);
-                changeStudentFrame.setLayout(new BorderLayout(5,5));
+                changeStudentFrame.setSize(400,200);
+                changeStudentFrame.setLayout(new BorderLayout(2,2));
                 //create an array that has a list of student names
 
-                //		assignmentList = new JComboBox();
-
+		JLabel selectLabel = new JLabel("Please select assignment:");
                 JButton saveButton = new JButton("save");
 
 
-                //      System.out.println(gradeTable.getModel().getValueAt(0, 2));
-
-                System.out.println("THISS");
-                System.out.println(gradeTable.getColumnName(3));
 
                 Object [] list;
 
@@ -486,7 +400,6 @@ public class GradebookGUI extends JFrame{
                 list = new Object[column];
 
                 for (int i = 0; i< column; i++){
-                    //System.out.println(gradeTable.getModel().getValueAt(i,2));
                     list[i] = gradeTable.getColumnName(i+3);//getModel().getValueAt(2,i);
 
                     assignmentList.addItem(list[i]);
@@ -497,9 +410,9 @@ public class GradebookGUI extends JFrame{
                 saveButton.setActionCommand("saveRemoveAssignment");
                 saveButton.addActionListener(new ButtonClickListener());
 
-//
                 System.out.println(nameList.getSelectedItem());
-                changeStudentFrame.add(assignmentList,BorderLayout.NORTH);
+		changeStudentFrame.add(selectLabel,BorderLayout.WEST);
+                changeStudentFrame.add(assignmentList,BorderLayout.EAST);
                 changeStudentFrame.add(saveButton, BorderLayout.SOUTH);
                 changeStudentFrame.setVisible(true);
 
@@ -508,7 +421,6 @@ public class GradebookGUI extends JFrame{
 
             if(command.equals("saveRemoveAssignment")){
 
-//System.out.println(assignmentList.getSelectedItem());
                 int col = gradeTable.getColumnCount();
                 int columnIndex= 0;
                 for (int i = 0; i< col; i++){
@@ -523,11 +435,6 @@ public class GradebookGUI extends JFrame{
                         identifiers[k++] = gradeTable.getColumnName(i);
                     }
                 }
-
-
-//                              TableColumn tcol = gradeTable.getColumnModel().getColumn(selectedColumn);
-//                              gradeTable.getColumnModel().removeColumn
-//                              ((DefaultTableModel)gradeTable.getModel()).removeColumn(selectedColumn);
 
 
                 String[][] data = new String[gradeTable.getRowCount()][gradeTable.getColumnCount() - 1];
@@ -548,7 +455,6 @@ public class GradebookGUI extends JFrame{
                 modeltable = new DefaultTableModel(data, identifiers);
                 gradeTable.setModel(modeltable);
 
-                // changeStudentFrame.setVisible(false);
             }
 
 
@@ -734,6 +640,7 @@ class ButtonEditor extends DefaultCellEditor {
         if (isSelected) {
             button.setForeground(table.getSelectionForeground());
             button.setBackground(table.getSelectionBackground());
+
         } else {
             button.setForeground(table.getForeground());
             button.setBackground(table.getBackground());
@@ -763,21 +670,3 @@ class ButtonEditor extends DefaultCellEditor {
         super.fireEditingStopped();
     }
 }
-
-/*
- public void exportTable(JTable table, File file) throws IOException {
-        TableModel model = table.getModel();
-        FileWriter out = new FileWriter(file);
-        for(int i=0; i < model.getColumnCount(); i++) {
-            out.write(model.getColumnName(i) + "\t");
-        }
-        out.write("\n");
-        for(int i=0; i< model.getRowCount(); i++) {
-            for(int j=0; j < model.getColumnCount(); j++) {
-                out.write(model.getValueAt(i,j).toString()+"\t");
-            }
-            out.write("\n");
-        }
-        out.close();
-        System.out.println("write out to: " + file);
-    }*/
