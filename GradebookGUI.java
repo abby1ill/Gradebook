@@ -46,6 +46,7 @@ public class GradebookGUI extends JFrame{
     private JMenuBar MenuBar;
     private JMenuItem Edit_Student_ChangeTab, Edit_Student_AddTab, Edit_Student_RemoveTab;
     private JMenuItem Edit_Assignment_ChangeTab, Edit_Assignment_AddTab, Edit_Assignment_RemoveTab;
+	 private JMenuItem File_SaveTab;
     private JRadioButtonMenuItem studentAverage, assignmentAverage, finalAverage;
 
     public JTextField FNameEdit, LNameEdit, IDEdit;
@@ -91,7 +92,7 @@ public class GradebookGUI extends JFrame{
         Edit_Assignment_ChangeTab = new JMenuItem();
         Edit_Assignment_AddTab = new JMenuItem();
         Edit_Assignment_RemoveTab = new JMenuItem();
-
+		  File_SaveTab = new JMenuItem();
 
         assignmentList = new JComboBox();
         nameList = new JComboBox();
@@ -99,7 +100,13 @@ public class GradebookGUI extends JFrame{
 
         fileTab.setText("File");
 
+
+		  File_SaveTab.setText("Save");
+		  fileTab.add(File_SaveTab);
         MenuBar.add(fileTab);
+
+		  File_SaveTab.setActionCommand("FileSave");
+		  File_SaveTab.addActionListener(new ButtonClickListener()); 
 
         editTab.setText("Edit");
         editTab.add(Edit_StudentTab);
@@ -233,8 +240,8 @@ public class GradebookGUI extends JFrame{
 
             System.out.println(elements.size());
             System.out.println(numRows);
-            for(int i=0; i<numRows-1; i++) {
-                for (int j = 0; j<elements.size()-1; j++){
+            for(int i=0; i<numRows; i++) {
+                for (int j = 0; j<elements.size(); j++){
                     content[i][j] = elements.get(i)[j];
                 }
             }
@@ -348,6 +355,11 @@ public class GradebookGUI extends JFrame{
                 mainPage Home = new mainPage();
                 gradebookFrame.setVisible(false);
             }
+
+				if (command.equals("FileSave")){
+					writeGradebookFile();
+				}
+
             if(command.equals("AddStudent")){
 
                 ((DefaultTableModel)gradeTable.getModel()).addRow(new Object[]{"","","",""});
@@ -659,7 +671,7 @@ public class GradebookGUI extends JFrame{
         int row = gradeTable.getRowCount();
         int col = gradeTable.getColumnCount();
         try{
-            FileWriter writer = new FileWriter(dir.getAbsolutePath(), true);
+            FileWriter writer = new FileWriter(dir, false);
             BufferedWriter buffer = new BufferedWriter(writer);
 
             for (int i = 0; i < row; i++){
