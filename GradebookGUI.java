@@ -46,10 +46,8 @@ public class GradebookGUI extends JFrame{
     private JMenuBar MenuBar;
     private JMenuItem Edit_Student_ChangeTab, Edit_Student_AddTab, Edit_Student_RemoveTab;
     private JMenuItem Edit_Assignment_ChangeTab, Edit_Assignment_AddTab, Edit_Assignment_RemoveTab;
-    private JMenuItem File_SaveTab;
     private JRadioButtonMenuItem studentAverage, assignmentAverage, finalAverage;
-    
-	
+
     public JTextField FNameEdit, LNameEdit, IDEdit;
     public JFrame changeStudentFrame;
 
@@ -93,19 +91,16 @@ public class GradebookGUI extends JFrame{
         Edit_Assignment_ChangeTab = new JMenuItem();
         Edit_Assignment_AddTab = new JMenuItem();
         Edit_Assignment_RemoveTab = new JMenuItem();
-	File_SaveTab = new JMenuItem();
+
 
         assignmentList = new JComboBox();
         nameList = new JComboBox();
         assignmentAddList = new JComboBox();
 
         fileTab.setText("File");
-	File_SaveTab.setText("Save");
-	fileTab.add(File_SaveTab);
+
         MenuBar.add(fileTab);
-	
-	File_SaveTab.setActionCommand("FileSave");
-	File_SaveTab.addActionListener(new ButtonClickListener());     
+
         editTab.setText("Edit");
         editTab.add(Edit_StudentTab);
 
@@ -328,8 +323,6 @@ public class GradebookGUI extends JFrame{
 			col = col.toArray(columnNames);
 			  System.out.println(columnNames);
                         totalRows = elements.size();
-
-
                 } catch (Exception ex) {
                         ex.printStackTrace();
                 }
@@ -355,9 +348,6 @@ public class GradebookGUI extends JFrame{
                 mainPage Home = new mainPage();
                 gradebookFrame.setVisible(false);
             }
-	    if (command.equals("FileSave")){
-		    //FileSave
-	    }
             if(command.equals("AddStudent")){
 
                 ((DefaultTableModel)gradeTable.getModel()).addRow(new Object[]{"","","",""});
@@ -674,13 +664,14 @@ public class GradebookGUI extends JFrame{
 
             for (int i = 0; i < row; i++){
                 for (int j = 0; j < col; j++){
-                    if(i == row-1)
+                    if(j == col-1)
                         buffer.write(gradeTable.getValueAt(i, j) + "\n");
                     else {
                         buffer.write(gradeTable.getValueAt(i, j) + ",");
                     }
                 }
             }
+				buffer.close();
 
         }catch (IOException creationError) {
             creationError.printStackTrace();
@@ -765,7 +756,6 @@ class ButtonEditor extends DefaultCellEditor {
  public void exportTable(JTable table, File file) throws IOException {
         TableModel model = table.getModel();
         FileWriter out = new FileWriter(file);
-
         for(int i=0; i < model.getColumnCount(); i++) {
             out.write(model.getColumnName(i) + "\t");
         }
