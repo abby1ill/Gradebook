@@ -46,8 +46,10 @@ public class GradebookGUI extends JFrame{
     private JMenuBar MenuBar;
     private JMenuItem Edit_Student_ChangeTab, Edit_Student_AddTab, Edit_Student_RemoveTab;
     private JMenuItem Edit_Assignment_ChangeTab, Edit_Assignment_AddTab, Edit_Assignment_RemoveTab;
+    private JMenuItem File_SaveTab;
     private JRadioButtonMenuItem studentAverage, assignmentAverage, finalAverage;
-
+    
+	
     public JTextField FNameEdit, LNameEdit, IDEdit;
     public JFrame changeStudentFrame;
 
@@ -91,16 +93,19 @@ public class GradebookGUI extends JFrame{
         Edit_Assignment_ChangeTab = new JMenuItem();
         Edit_Assignment_AddTab = new JMenuItem();
         Edit_Assignment_RemoveTab = new JMenuItem();
-
+	File_SaveTab = new JMenuItem();
 
         assignmentList = new JComboBox();
         nameList = new JComboBox();
         assignmentAddList = new JComboBox();
 
         fileTab.setText("File");
-
+	File_SaveTab.setText("Save");
+	fileTab.add(File_SaveTab);
         MenuBar.add(fileTab);
-
+	
+	File_SaveTab.setActionCommand("FileSave");
+	File_SaveTab.addActionListener(new ButtonClickListener());     
         editTab.setText("Edit");
         editTab.add(Edit_StudentTab);
 
@@ -350,6 +355,9 @@ public class GradebookGUI extends JFrame{
                 mainPage Home = new mainPage();
                 gradebookFrame.setVisible(false);
             }
+	    if (command.equals("FileSave")){
+		    //FileSave
+	    }
             if(command.equals("AddStudent")){
 
                 ((DefaultTableModel)gradeTable.getModel()).addRow(new Object[]{"","","",""});
