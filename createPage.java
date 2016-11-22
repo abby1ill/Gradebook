@@ -165,16 +165,16 @@ public class createPage {
 					pastRubric PastRubric = new pastRubric();
 					createFrame.setVisible(false);
 				}
-			}
-			else {
-				JOptionPane.showMessageDialog(createFrame, "All fields must be filled", "Error", JOptionPane.ERROR_MESSAGE);
+				else {
+					JOptionPane.showMessageDialog(createFrame, "All fields must be filled", "Error", JOptionPane.ERROR_MESSAGE);
+				}
 			}
 
 			if (command.equals("home")) {
 				mainPage returnHome = new mainPage();
 				createFrame.setVisible(false);
 			}
-      }
+		}
    }
 
 	private class ComboBoxListener implements ActionListener{
