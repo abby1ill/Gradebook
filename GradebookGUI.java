@@ -297,11 +297,10 @@ public class GradebookGUI extends JFrame{
 
                 Object [] list;
 
-                int column = gradeTable.getColumnCount() - 3;
-                list = new Object[column];
+                list = new Object[assignmentArr.length];
 
-                for (int i = 0; i< column; i++){
-                    list[i] = gradeTable.getColumnName(i+3);//getModel().getValueAt(2,i);
+                for (int i = 0; i< assignmentArr.length; i++){
+                    list[i] = assignmentArr[i].getAssignment();
 
                     assignmentAddList.addItem(list[i]);
 
@@ -419,6 +418,8 @@ public class GradebookGUI extends JFrame{
                         columnIndex = i;
                 }
 
+					 int removeCol = columnIndex;
+
                 String[] identifiers = new String[gradeTable.getColumnCount() - 1];
                 int k = 0;
                 for(int i = 0; i < gradeTable.getColumnCount(); i++) {
@@ -446,6 +447,7 @@ public class GradebookGUI extends JFrame{
                 modeltable = new DefaultTableModel(data, identifiers);
                 gradeTable.setModel(modeltable);
 
+					 fileRemoveAssignment(removeCol);
                 // changeStudentFrame.setVisible(false);
             }
 
@@ -502,11 +504,9 @@ public class GradebookGUI extends JFrame{
 								String assignName = gradeTable.getColumnName(j);
 
 								if (assignName.equals(rubricMetric)) {
-									System.out.println("assign " + assignName + " rub " + rubricMetric);
 									matches++;
 									grade += Integer.parseInt(gradeTable.getValueAt(k,j).toString());
 									avg = grade/matches;
-									System.out.println(assignName + " average " + avg);
 								}	
                     	}
 							double weight = ((double) percentage)/100;
@@ -629,6 +629,37 @@ public class GradebookGUI extends JFrame{
              creationError.printStackTrace();
          }
 	 }
+
+	 private void fileRemoveAssignment (int columnNum) {
+
+		 try {
+	 	 	File assignFile = new File(mainPage.AssignFP);
+		 	File tempFile = new File ("tempFile.txt");
+
+		 	BufferedReader reader = new BufferedReader (new FileReader(assignFile));
+		 	BufferedWriter writer = new BufferedWriter (new FileWriter(tempFile));
+
+			String cur;
+
+		 	for (int i=0; i<columnNum; i++) {
+				cur = reader.readLine();
+				writer.write(cur + "\n");
+			}
+
+			cur = reader.readLine();
+
+			while ((cur = reader.readLine()) != null) {
+				writer.write(cur + "\n");
+			}
+
+		 	writer.close();
+		 	reader.close();
+
+		 	tempFile.renameTo(assignFile);
+	 	} catch (IOException error) {
+			error.printStackTrace();
+		}
+	}
 }
 
 class ButtonRenderer extends JButton implements TableCellRenderer {
@@ -703,4 +734,3 @@ class ButtonEditor extends DefaultCellEditor {
         super.fireEditingStopped();
     }
 }
-

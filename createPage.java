@@ -148,6 +148,7 @@ public class createPage {
             	nameAndNum = nameAndNum.replaceAll(" ","");
             	mainPage.GradebookFP = "semesters/" + curSem + "/" + nameAndNum + ".csv";
 			      mainPage.RubricFP = "rubrics/" + curSem + "/" + nameAndNum + "Rubric.txt";
+	            mainPage.AssignFP = "assignments/" + curSem + "/" + nameAndNum + "Assignments.txt";
 
             	try {
                	FileWriter writer = new FileWriter(mainPage.semesterDir, true);
