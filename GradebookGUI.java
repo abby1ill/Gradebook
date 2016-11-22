@@ -18,8 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import java.lang.Object;
-
-
 import javax.swing.JComboBox;
 
 public class GradebookGUI extends JFrame{
@@ -44,9 +42,9 @@ public class GradebookGUI extends JFrame{
     private JMenu fileTab, editTab, calculateTab, Edit_StudentTab;
     private JMenu Edit_AssignmentTab;
     private JMenuBar MenuBar;
-    private JMenuItem Edit_Student_ChangeTab, Edit_Student_AddTab, Edit_Student_RemoveTab;
-    private JMenuItem Edit_Assignment_ChangeTab, Edit_Assignment_AddTab, Edit_Assignment_RemoveTab;
-	 private JMenuItem File_SaveTab;
+    private JMenuItem Edit_Student_AddTab, Edit_Student_RemoveTab;
+    private JMenuItem Edit_Assignment_AddTab, Edit_Assignment_RemoveTab;
+    private JMenuItem File_SaveTab;
     private JRadioButtonMenuItem studentAverage, assignmentAverage, finalAverage;
 
     public JTextField FNameEdit, LNameEdit, IDEdit;
@@ -81,16 +79,13 @@ public class GradebookGUI extends JFrame{
         calculateTab = new JMenu();
         studentAverage = new JRadioButtonMenuItem();
         assignmentAverage = new JRadioButtonMenuItem();
-        finalAverage = new JRadioButtonMenuItem();
         Edit_StudentTab = new JMenu();
-        Edit_Student_ChangeTab = new JMenuItem();
         Edit_Student_AddTab = new JMenuItem();
         Edit_Student_RemoveTab = new JMenuItem();
         Edit_AssignmentTab = new JMenu();
-        Edit_Assignment_ChangeTab = new JMenuItem();
         Edit_Assignment_AddTab = new JMenuItem();
         Edit_Assignment_RemoveTab = new JMenuItem();
-		  File_SaveTab = new JMenuItem();
+	File_SaveTab = new JMenuItem();
 
         assignmentList = new JComboBox();
         nameList = new JComboBox();
@@ -99,12 +94,12 @@ public class GradebookGUI extends JFrame{
         fileTab.setText("File");
 
 
-		  File_SaveTab.setText("Save");
-		  fileTab.add(File_SaveTab);
+	File_SaveTab.setText("Save");
+	fileTab.add(File_SaveTab);
         MenuBar.add(fileTab);
 
-		  File_SaveTab.setActionCommand("FileSave");
-		  File_SaveTab.addActionListener(new ButtonClickListener()); 
+	File_SaveTab.setActionCommand("FileSave");
+	File_SaveTab.addActionListener(new ButtonClickListener()); 
 
         editTab.setText("Edit");
         editTab.add(Edit_StudentTab);
@@ -115,7 +110,6 @@ public class GradebookGUI extends JFrame{
         studentAverage.addActionListener(new ButtonClickListener());
 
         calculateTab.add(assignmentAverage);
-        calculateTab.add(finalAverage);
 
         studentAverage.setText("Student Average");
         assignmentAverage.setText("Assignment Average");
@@ -123,18 +117,11 @@ public class GradebookGUI extends JFrame{
         assignmentAverage.addActionListener(new ButtonClickListener());
 
 
-        finalAverage.setText("Final Average");
-
 
         MenuBar.add(calculateTab);
 
         Edit_StudentTab.setText("Student");
 
-        //Edit_Student_ChangeTab.setText("Change");
-        //Edit_StudentTab.add(Edit_Student_ChangeTab);
-
-        //Edit_Student_ChangeTab.setActionCommand("ChangeStudent");
-        //Edit_Student_ChangeTab.addActionListener(new ButtonClickListener());
 
         Edit_Student_AddTab.setText("Add");
         Edit_StudentTab.add(Edit_Student_AddTab);
@@ -148,10 +135,6 @@ public class GradebookGUI extends JFrame{
 
         Edit_AssignmentTab.setText("Assignment");
 
-        Edit_Assignment_ChangeTab.setText("Change");
-        Edit_AssignmentTab.add(Edit_Assignment_ChangeTab);
-        Edit_Assignment_ChangeTab.setActionCommand("ChangeAssignment");
-        Edit_Assignment_ChangeTab.addActionListener(new ButtonClickListener());
 
         Edit_Assignment_AddTab.setText("Add");
         Edit_AssignmentTab.add(Edit_Assignment_AddTab);
@@ -202,7 +185,7 @@ public class GradebookGUI extends JFrame{
         classNamePanel.setLayout(new BoxLayout(classNamePanel, BoxLayout.Y_AXIS));
         classNamePanel.setBackground(new Color(188, 86, 86));
 
-        //Opens cvs file
+        //Opens csv file
 
         try {
             File csvFile = new File(mainPage.GradebookFP);
@@ -223,7 +206,6 @@ public class GradebookGUI extends JFrame{
 		
 		      BufferedReader br = new BufferedReader(new FileReader(csvFile));
 
-            // List<String[]> elements = new ArrayList<String[]>();
             String line = null;
 				int rIndex = 0;
             while((line=br.readLine())!=null) {
@@ -231,7 +213,6 @@ public class GradebookGUI extends JFrame{
 					 for (int j=0; j<splitted.length; j++) {
 					    elements[rIndex][j] = splitted[j];
 					 }
-         	    //elements.add(splitted); 	
                 rIndex++;
             }
             br.close();
@@ -254,17 +235,6 @@ public class GradebookGUI extends JFrame{
         gradebookFrame.add(classNamePanel, BorderLayout.WEST);
         gradebookFrame.add(tablePanel,BorderLayout.CENTER);
         gradebookFrame.setVisible(true);
-    }
-
-
-    private static void setWidthAsPercentages(JTable table, double... percentages) {
-        final double factor = 10000;
-
-        TableColumnModel model = table.getColumnModel();
-        for (int columnIndex = 0; columnIndex < percentages.length; columnIndex++) {
-            TableColumn column = model.getColumn(columnIndex);
-            column.setPreferredWidth((int) (percentages[columnIndex] * factor));
-        }
     }
 
 
@@ -321,7 +291,8 @@ public class GradebookGUI extends JFrame{
 					 String addedCol = assignmentAddList.getSelectedItem().toString();
 
                 for (int i = 0; i< col; i++){
-                    if (assignmentAddList.getSelectedItem() == gradeTable.getModel().getColumnName(i))                                          columnIndex = i;
+                    if (assignmentAddList.getSelectedItem() == gradeTable.getModel().getColumnName(i))
+                                          columnIndex = i;
                 }
                 ((DefaultTableModel)gradeTable.getModel()).addColumn(assignmentAddList.getSelectedItem());
 
@@ -448,7 +419,6 @@ public class GradebookGUI extends JFrame{
                 gradeTable.setModel(modeltable);
 
 					 fileRemoveAssignment(removeCol);
-                // changeStudentFrame.setVisible(false);
             }
 
 
@@ -660,77 +630,4 @@ public class GradebookGUI extends JFrame{
 			error.printStackTrace();
 		}
 	}
-}
-
-class ButtonRenderer extends JButton implements TableCellRenderer {
-
-    public ButtonRenderer() {
-        setOpaque(true);
-    }
-
-    public Component getTableCellRendererComponent(JTable table, Object value,
-                                                   boolean isSelected, boolean hasFocus, int row, int column) {
-        if (isSelected) {
-            setForeground(table.getSelectionForeground());
-            setBackground(table.getSelectionBackground());
-        } else {
-            setForeground(table.getForeground());
-            setBackground(UIManager.getColor("Button.background"));
-        }
-        setText((value == null) ? "" : value.toString());
-        return this;
-    }
-}
-
-
-class ButtonEditor extends DefaultCellEditor {
-    protected JButton button;
-    private String label;
-    private boolean isPushed;
-
-    public ButtonEditor(JCheckBox checkBox) {
-        super(checkBox);
-        button = new JButton();
-        button.setOpaque(true);
-
-        button.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                fireEditingStopped();
-            }
-        });
-    }
-
-    public Component getTableCellEditorComponent(JTable table, Object value,
-                                                 boolean isSelected, int row, int column) {
-        if (isSelected) {
-            button.setForeground(table.getSelectionForeground());
-            button.setBackground(table.getSelectionBackground());
-        } else {
-            button.setForeground(table.getForeground());
-            button.setBackground(table.getBackground());
-        }
-        label = (value == null) ? "" : value.toString();
-        button.setText(label);
-        isPushed = true;
-        return button;
-    }
-
-    public Object getCellEditorValue() {
-        if (isPushed) {
-
-            JOptionPane.showMessageDialog(button, label);
-            // System.out.println(label + ": Ouch!");
-        }
-        isPushed = false;
-        return new String(label);
-    }
-
-    public boolean stopCellEditing() {
-        isPushed = false;
-        return super.stopCellEditing();
-    }
-
-    protected void fireEditingStopped() {
-        super.fireEditingStopped();
-    }
 }
