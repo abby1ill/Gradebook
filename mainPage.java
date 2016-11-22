@@ -20,7 +20,7 @@ public class mainPage {
 	private JComboBox<String> semesterList;
 	public static String semesterDir;
 	public static String selectedSemester;
-	public static String GradebookFP, RubricFP;
+	public static String GradebookFP, RubricFP, AssignFP;
 	int classListSize;
 
 	public mainPage(){
@@ -169,9 +169,14 @@ public class mainPage {
          }
 
 			if (command.equals("createClass")) {
-				destroyClassPage();
-				createPage CreatePage = new createPage();			
-				mainFrame.setVisible(false);
+				if (selectedSemester.isEmpty()) {
+					JOptionPane.showMessageDialog(mainFrame, "Percentages must add to 100%", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+				else {
+					destroyClassPage();
+					createPage CreatePage = new createPage();			
+					mainFrame.setVisible(false);
+				}
 			}
 
 			for (int i=0; i<classListSize; i++) {
@@ -182,6 +187,7 @@ public class mainPage {
 
 					GradebookFP = "semesters/" + semDir + "/" + courseName + ".csv";
 					RubricFP = "rubrics/" + semDir + "/" + courseName + "Rubric.txt";
+					AssignFP = "assignments/" + semDir + "/" + courseName + "Assignments.txt";
 
 					GradebookGUI gradePage = new GradebookGUI();
 					mainFrame.setVisible(false);

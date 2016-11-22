@@ -127,16 +127,14 @@ public class rubricBuilder {
 	
 				boolean emptyFieldCheck = emptyFields();
  
-            if(!emptyFieldCheck)
-               JOptionPane.showMessageDialog(rubricFrame, "All fields must be filled", "Error", JOptionPane.ERROR_MESSAGE);
-
-				if (percentageCheck) {
+				if (percentageCheck && emptyFieldCheck) {
 					writeRubricFile();
+					writeAssignmentFile();
 					GradebookGUI gradebookPage = new GradebookGUI();
 					rubricFrame.setVisible(false);
 				}
 				else {
-					JOptionPane.showMessageDialog(rubricFrame, "Percentages must add to 100%", "Error", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(rubricFrame, "Fields must be filled and percentages must add to 100%", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		 }
@@ -181,6 +179,39 @@ public class rubricBuilder {
 	 	catch(IOException creationError){
          creationError.printStackTrace();
      	}
+	 }
+
+	 private void writeAssignmentFile() {
+		 int numOfAssign = assignmentField.size();
+	 	 String assignDir = mainPage.selectedSemester.replaceAll(" ", "");
+		 File dir = new File("assignments/" + assignDir);
+       dir.mkdirs();
+
+       try {
+         String classAssign = className.replaceAll(" ", "");
+
+         File assignFile = new File (dir, classAssign + "Assignments.txt");
+
+         if(!assignFile.exists()) {
+            assignFile.createNewFile();
+         }
+
+         FileWriter writer = new FileWriter(assignFile.getAbsolutePath(), true);
+         BufferedWriter buffer = new BufferedWriter(writer);
+
+			buffer.write("ID\n");
+			buffer.write("Last Name\n");
+			buffer.write("First Name\n");
+
+         for (int k=0; k<numOfAssign; k++) {
+            buffer.write(assignmentArray[k] + "\n");
+         }
+         buffer.close();
+      }
+
+      catch(IOException creationError){
+         creationError.printStackTrace();
+      }
 	 }
 
 	 private boolean verifyPercentages() {

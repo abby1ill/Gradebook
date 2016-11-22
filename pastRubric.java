@@ -47,7 +47,6 @@ public class pastRubric {
 	private void pastRubricGUI() {
 		headerPanel = new JPanel();
 		headerPanel.setLayout(new FlowLayout());
-//      headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.Y_AXIS));
 
 		listPanel = new JPanel();
       listPanel.setLayout(new GridLayout(0,2));
@@ -150,6 +149,7 @@ public class pastRubric {
 
             if (percentageCheck) {
                writeRubricFile();
+					writeAssignmentFile();
                GradebookGUI gradebookPage = new GradebookGUI();
                pastFrame.setVisible(false);
             }
@@ -192,6 +192,39 @@ public class pastRubric {
 
          for (int k=0; k<numOfAssign; k++) {
             buffer.write(assignmentArray[k] + "," + percentArray[k] + "\n");
+         }
+         buffer.close();
+      }
+
+      catch(IOException creationError){
+         creationError.printStackTrace();
+      }
+    }
+
+	 private void writeAssignmentFile() {
+		 int numOfAssign = assignmentField.size();
+       String assignDir = mainPage.selectedSemester.replaceAll(" ", "");
+       File dir = new File("assignments/" + assignDir);
+       dir.mkdirs();
+
+       try {
+         String classAssign = className.replaceAll(" ", "");
+
+         File assignFile = new File (dir, classAssign + "Assignments.txt");
+
+         if(!assignFile.exists()) {
+            assignFile.createNewFile();
+         }
+
+         FileWriter writer = new FileWriter(assignFile.getAbsolutePath(), true);
+         BufferedWriter buffer = new BufferedWriter(writer);
+
+			buffer.write("ID\n");
+         buffer.write("Last Name\n");
+         buffer.write("First Name\n");
+
+         for (int k=0; k<numOfAssign; k++) {
+            buffer.write(assignmentArray[k] + "\n");
          }
          buffer.close();
       }

@@ -111,6 +111,7 @@ public class createPage {
 			String courseNum = courseNumber.getText();
          String courseName = courseNameField.getText();
 			String curSem = (mainPage.selectedSemester).replaceAll(" ","");
+
          courseTitle = courseNum + " " + courseName;
 
          if (command.equals("newRubric")) {
@@ -120,7 +121,7 @@ public class createPage {
 					nameAndNum = nameAndNum.replaceAll(" ","");
 					mainPage.GradebookFP = "semesters/" + curSem + "/" + nameAndNum + ".csv";
 					mainPage.RubricFP = "rubrics/" + curSem + "/" + nameAndNum + "Rubric.txt";
-
+					mainPage.AssignFP = "assignments/" + curSem + "/" + nameAndNum + "Assignments.txt";
             	try {
                	FileWriter writer = new FileWriter(mainPage.semesterDir, true);
 
