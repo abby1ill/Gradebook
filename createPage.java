@@ -185,24 +185,24 @@ public class createPage {
    }
 
 	private String[] getRubricList() {
-      try {
-         Scanner rubricsFile = new Scanner(new File("rubrics/rubricList.txt"));
+		try {
+			Scanner rubricsFile = new Scanner(new File("rubrics/rubricList.txt"));
 
-         List<String> lines = new ArrayList<String>();
-         while (rubricsFile.hasNextLine()) {
-            lines.add(rubricsFile.nextLine());
-         }
-         String[] rubrics = lines.toArray(new String[0]);
+         		List<String> lines = new ArrayList<String>();
+         		while (rubricsFile.hasNextLine()) {
+            			lines.add(rubricsFile.nextLine());
+         		}
+         		String[] rubrics = lines.toArray(new String[0]);
 
-         return rubrics;
-      }
-      catch (FileNotFoundException ex) {
-         System.out.println(ex.getMessage());
-         String[] rubrics = { "No rubrics created" };
+        		return rubrics;
+      		}
+      		catch (FileNotFoundException ex) {
+         		System.out.println(ex.getMessage());
+         		String[] rubrics = { "No rubrics created" };
 
-         return rubrics;
-      }
-   }
+         		return rubrics;
+      		}
+   	}
 
 	private boolean emptyFields() {     
    	if(courseNumber.getText().equals("") || courseNameField.getText().equals("")) {
