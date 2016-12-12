@@ -81,11 +81,11 @@ public class loginPage {
             String userEntry = usernameField.getText();
             char[] passEntry = passwordField.getPassword();
             if (userEntry.equals(username) & Arrays.equals(passEntry, password)){
-               mainPage MainPage = new mainPage();
-					loginFrame.dispose();
+		    mainPage MainPage = new mainPage();
+		    loginFrame.dispose();
             }
             else {
-               JOptionPane.showMessageDialog(loginFrame, "Invalid username/password", "Error", JOptionPane.ERROR_MESSAGE);
+		    JOptionPane.showMessageDialog(loginFrame, "Invalid username/password", "Error", JOptionPane.ERROR_MESSAGE);
             }
          }
       }
