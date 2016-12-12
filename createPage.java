@@ -178,11 +178,11 @@ public class createPage {
 	}
 
 	private class ComboBoxListener implements ActionListener{
-      public void actionPerformed(ActionEvent e) {
-         JComboBox box = (JComboBox) e.getSource();
-         selectedRubric = (String)box.getSelectedItem();
-      }
-   }
+		public void actionPerformed(ActionEvent e) {
+         		JComboBox box = (JComboBox) e.getSource();
+         		selectedRubric = (String)box.getSelectedItem();
+      		}
+   	}
 
 	private String[] getRubricList() {
 		try {
