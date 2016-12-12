@@ -146,14 +146,11 @@ public class mainPage {
                		if(!semesterFile.exists()){
                   		semesterFile.createNewFile();
                		}
-
 			if(!classList.exists()){
    	            		classList.createNewFile();
 	            	}
 
-
                		FileWriter writer = new FileWriter(semesterFile.getName(),true);
-
                		BufferedWriter buffer = new BufferedWriter(writer);
                		buffer.write(newSemester + "\n");
                		buffer.close();
