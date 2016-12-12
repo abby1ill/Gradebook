@@ -132,72 +132,72 @@ public class mainPage {
    private class ButtonClickListener implements ActionListener{
       public void actionPerformed(ActionEvent e) {
          String command = e.getActionCommand();
-            
-			if (command.equals("createSemester")) {
-				String newSemester = JOptionPane.showInputDialog(mainFrame, "Enter semester and year: ");
-				semesterDir = newSemester.replaceAll(" ","");
+           if (command.equals("createSemester")) {
+		String newSemester = JOptionPane.showInputDialog(mainFrame, "Enter semester and year: ");
+		semesterDir = newSemester.replaceAll(" ","");
 
-				File dir = new File(new File("semesters/" + semesterDir).getAbsolutePath());
-            dir.mkdirs();
+		File dir = new File(new File("semesters/" + semesterDir).getAbsolutePath());
+            	dir.mkdirs();
 				
-            try {
-               File semesterFile = new File(new File("semesterList.txt").getAbsolutePath());
-					File classList = new File (dir, semesterDir + "classList.txt");
+            	try {
+              		File semesterFile = new File(new File("semesterList.txt").getAbsolutePath());
+			File classList = new File (dir, semesterDir + "classList.txt");
 
-               if(!semesterFile.exists()){
-                  semesterFile.createNewFile();
-               }
+               		if(!semesterFile.exists()){
+                  		semesterFile.createNewFile();
+               		}
 
-					if(!classList.exists()){
-   	            classList.createNewFile();
-	            }
+			if(!classList.exists()){
+   	            		classList.createNewFile();
+	            	}
 
 
-               FileWriter writer = new FileWriter(semesterFile.getName(),true);
+               		FileWriter writer = new FileWriter(semesterFile.getName(),true);
 
-               BufferedWriter buffer = new BufferedWriter(writer);
-               buffer.write(newSemester + "\n");
-               buffer.close();
+               		BufferedWriter buffer = new BufferedWriter(writer);
+               		buffer.write(newSemester + "\n");
+               		buffer.close();
 
-					destroyClassPage();
-					classPageGUI();
-            }
+			destroyClassPage();
+			classPageGUI();
+            	}
 
-            catch(IOException creationError){
-               creationError.printStackTrace();
-            }
+            	catch(IOException creationError){
+               		creationError.printStackTrace();
+            	}
          }
 
-			if (command.equals("createClass")) {
-				if (selectedSemester.isEmpty()) {
-					JOptionPane.showMessageDialog(mainFrame, "Percentages must add to 100%", "Error", JOptionPane.ERROR_MESSAGE);
-				}
-				else {
-					destroyClassPage();
-					createPage CreatePage = new createPage();			
-					mainFrame.setVisible(false);
-				}
-			}
-
-			for (int i=0; i<classListSize; i++) {
-				if (command.equals(classes[i])) {
-					createPage.courseTitle = classes[i];
-					String courseName = classes[i].replaceAll(" ","");
-					String semDir = selectedSemester.replaceAll(" ","");
-
-					GradebookFP = "semesters/" + semDir + "/" + courseName + ".csv";
-					RubricFP = "rubrics/" + semDir + "/" + courseName + "Rubric.txt";
-					AssignFP = "assignments/" + semDir + "/" + courseName + "Assignments.txt";
-
-					GradebookGUI gradePage = new GradebookGUI();
-					mainFrame.setVisible(false);
-				}
-			}
+	 if (command.equals("createClass")) {
+		if (selectedSemester.equals("No semesters created")) {
+			JOptionPane.showMessageDialog(mainFrame, "Please create a semester", "Error", JOptionPane.ERROR_MESSAGE);
+		}
+		else {
+			destroyClassPage();
+			createPage CreatePage = new createPage();			
+			mainFrame.setVisible(false);
 		}
 	}
 
+	for (int i=0; i<classListSize; i++) {
+		if (command.equals(classes[i])) {
+			createPage.courseTitle = classes[i];
+			String courseName = classes[i].replaceAll(" ","");
+			String semDir = selectedSemester.replaceAll(" ","");
+
+			GradebookFP = "semesters/" + semDir + "/" + courseName + ".csv";
+			RubricFP = "rubrics/" + semDir + "/" + courseName + "Rubric.txt";
+			AssignFP = "assignments/" + semDir + "/" + courseName + "Assignments.txt";
+
+			GradebookGUI gradePage = new GradebookGUI();
+			mainFrame.setVisible(false);
+		}
+	}
+	
+      }
+    }
+
 	private class ComboBoxListener implements ActionListener{
-      public void actionPerformed(ActionEvent e) {
+      		public void actionPerformed(ActionEvent e) {
 			JComboBox box = (JComboBox) e.getSource();
 			selectedSemester = (String)box.getSelectedItem();
 			semesterDir = getSelectedSemester(selectedSemester);
@@ -228,19 +228,19 @@ public class mainPage {
 
 	private void loadButtons(String curSemester) {
 		classes = getClassList(curSemester);
-      classListSize = classes.length;
-      classButton = new JButton[classListSize];
+      		classListSize = classes.length;
+      		classButton = new JButton[classListSize];
 
-      for (int i=0; i<classListSize; i++) {
-         classButton[i] = new JButton(classes[i]);
-         classButton[i].setAlignmentX(Component.CENTER_ALIGNMENT);
+      		for (int i=0; i<classListSize; i++) {
+         		classButton[i] = new JButton(classes[i]);
+         		classButton[i].setAlignmentX(Component.CENTER_ALIGNMENT);
 			classButton[i].setActionCommand(classes[i]);
-		   classButton[i].addActionListener(new ButtonClickListener());
-      }
+		   	classButton[i].addActionListener(new ButtonClickListener());
+      		}
 
 		for (int j=0; j<classListSize; j++) {
-         classListPanel.add(classButton[j]);
-      }
+         		classListPanel.add(classButton[j]);
+      		}
 
 		classListPanel.setVisible(true);
 		classPagePanel.add(classListPanel, BorderLayout.CENTER);
