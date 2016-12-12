@@ -104,78 +104,78 @@ public class createPage {
 	}
 
 	private class ButtonClickListener implements ActionListener{
-      public void actionPerformed(ActionEvent e) {
-         String command = e.getActionCommand();
-			boolean emptyFieldCheck = emptyFields();
+   	   public void actionPerformed(ActionEvent e) {
+		String command = e.getActionCommand();
+		boolean emptyFieldCheck = emptyFields();
 
-			String courseNum = courseNumber.getText();
-         String courseName = courseNameField.getText();
-			String curSem = (mainPage.selectedSemester).replaceAll(" ","");
+		String courseNum = courseNumber.getText();
+        	String courseName = courseNameField.getText();
+		String curSem = (mainPage.selectedSemester).replaceAll(" ","");
 
-         courseTitle = courseNum + " " + courseName;
+         	courseTitle = courseNum + " " + courseName;
 
-         if (command.equals("newRubric")) {
+         	if (command.equals("newRubric")) {
 			
-				if (emptyFieldCheck) {
-					String nameAndNum = courseNum + courseName;
-					nameAndNum = nameAndNum.replaceAll(" ","");
-					mainPage.GradebookFP = "semesters/" + curSem + "/" + nameAndNum + ".csv";
-					mainPage.RubricFP = "rubrics/" + curSem + "/" + nameAndNum + "Rubric.txt";
-					mainPage.AssignFP = "assignments/" + curSem + "/" + nameAndNum + "Assignments.txt";
-            	try {
-               	FileWriter writer = new FileWriter(mainPage.semesterDir, true);
+			if (emptyFieldCheck) {
+				String nameAndNum = courseNum + courseName;
+				nameAndNum = nameAndNum.replaceAll(" ","");
+				mainPage.GradebookFP = "semesters/" + curSem + "/" + nameAndNum + ".csv";
+				mainPage.RubricFP = "rubrics/" + curSem + "/" + nameAndNum + "Rubric.txt";
+				mainPage.AssignFP = "assignments/" + curSem + "/" + nameAndNum + "Assignments.txt";
+            			try {
+               				FileWriter writer = new FileWriter(mainPage.semesterDir, true);
 
-               	BufferedWriter buffer = new BufferedWriter(writer);
-               	buffer.write(courseNum + " " + courseName  + "\n");
-               	buffer.close();
-            	}
+               				BufferedWriter buffer = new BufferedWriter(writer);
+               				buffer.write(courseNum + " " + courseName  + "\n");
+               				buffer.close();
+		            	}
 
-            	catch(IOException creationError){
-               	creationError.printStackTrace();
-            	}
+            			catch(IOException creationError){
+               				creationError.printStackTrace();
+            			}
 
-					rubricBuilder RubricBuilder = new rubricBuilder();
-            	createFrame.setVisible(false);
-				}
-				else {
-					JOptionPane.showMessageDialog(createFrame, "All fields must be filled", "Error", JOptionPane.ERROR_MESSAGE);
-				}
-         }
-
-			if (command.equals("pastRubric")) {
-				if (emptyFieldCheck) {
-					String nameAndNum = courseNum + courseName;
-            	nameAndNum = nameAndNum.replaceAll(" ","");
-            	mainPage.GradebookFP = "semesters/" + curSem + "/" + nameAndNum + ".csv";
-			      mainPage.RubricFP = "rubrics/" + curSem + "/" + nameAndNum + "Rubric.txt";
-	            mainPage.AssignFP = "assignments/" + curSem + "/" + nameAndNum + "Assignments.txt";
-
-            	try {
-               	FileWriter writer = new FileWriter(mainPage.semesterDir, true);
-
-               	BufferedWriter buffer = new BufferedWriter(writer);
-               	buffer.write(courseNum + " " + courseName  + "\n");
-               	buffer.close();
-            	}
-
-            	catch(IOException creationError){
-               	creationError.printStackTrace();
-            	}
-		
-					pastRubric PastRubric = new pastRubric();
-					createFrame.setVisible(false);
-				}
-				else {
-					JOptionPane.showMessageDialog(createFrame, "All fields must be filled", "Error", JOptionPane.ERROR_MESSAGE);
-				}
+				rubricBuilder RubricBuilder = new rubricBuilder();
+            			createFrame.setVisible(false);
 			}
-
-			if (command.equals("home")) {
-				mainPage returnHome = new mainPage();
-				createFrame.setVisible(false);
+			else {
+				JOptionPane.showMessageDialog(createFrame, "All fields must be filled", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
-   }
+
+		if (command.equals("pastRubric")) {
+			if (emptyFieldCheck) {
+				String nameAndNum = courseNum + courseName;
+            			nameAndNum = nameAndNum.replaceAll(" ","");
+            			mainPage.GradebookFP = "semesters/" + curSem + "/" + nameAndNum + ".csv";
+			      	mainPage.RubricFP = "rubrics/" + curSem + "/" + nameAndNum + "Rubric.txt";
+	            		mainPage.AssignFP = "assignments/" + curSem + "/" + nameAndNum + "Assignments.txt";
+
+            			try {
+              			 	FileWriter writer = new FileWriter(mainPage.semesterDir, true);
+
+              			 	BufferedWriter buffer = new BufferedWriter(writer);
+            			   	buffer.write(courseNum + " " + courseName  + "\n");
+           			    	buffer.close();
+            			}
+
+            			catch(IOException creationError){
+         			      	creationError.printStackTrace();
+         		   	}
+		
+				pastRubric PastRubric = new pastRubric();
+				createFrame.setVisible(false);
+			}
+			else {
+				JOptionPane.showMessageDialog(createFrame, "All fields must be filled", "Error", JOptionPane.ERROR_MESSAGE);
+			}
+		}
+
+		if (command.equals("home")) {
+			mainPage returnHome = new mainPage();
+			createFrame.setVisible(false);
+		}
+	   }
+	}
 
 	private class ComboBoxListener implements ActionListener{
       public void actionPerformed(ActionEvent e) {
