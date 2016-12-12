@@ -132,7 +132,7 @@ public class mainPage {
    private class ButtonClickListener implements ActionListener{
       public void actionPerformed(ActionEvent e) {
          String command = e.getActionCommand();
-           if (command.equals("createSemester")) {
+	      if (command.equals("createSemester")) {
 		String newSemester = JOptionPane.showInputDialog(mainFrame, "Enter semester and year: ");
 		semesterDir = newSemester.replaceAll(" ","");
 
@@ -164,8 +164,8 @@ public class mainPage {
 
             	catch(IOException creationError){
                		creationError.printStackTrace();
-            	}
-         }
+		}
+	      }
 
 	 if (command.equals("createClass")) {
 		if (selectedSemester.equals("No semesters created")) {
