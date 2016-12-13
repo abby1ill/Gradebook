@@ -462,29 +462,30 @@ public class GradebookGUI extends JFrame{
                 studentAvg = new Object[rowCount];
 
                 for (int k=0; k<rowCount; k++) {
-						float average = 0;
-					 	for (int i=0; i<assignmentArr.length; i++) {
-						  	int matches = 0;
-						  	String rubricMetric = assignmentArr[i].getAssignment();
-						  	int percentage = assignmentArr[i].getPercentage();
-						  	int grade = 0; 
-							double avg = 0;
-                    	for (int j=3; j<colCount; j++) {
+			float average = 0;
+			for (int i=0; i<assignmentArr.length; i++) {
+				int matches = 0;
+				String rubricMetric = assignmentArr[i].getAssignment();
+				int percentage = assignmentArr[i].getPercentage();
+				int grade = 0; 
+				double avg = 0;
+				
+                    		for (int j=3; j<colCount; j++) {
+					String assignName = gradeTable.getColumnName(j);
 
-								String assignName = gradeTable.getColumnName(j);
-
-								if (assignName.equals(rubricMetric)) {
-									matches++;
-									grade += Integer.parseInt(gradeTable.getValueAt(k,j).toString());
-									avg = grade/matches;
-								}	
-                    	}
-							double weight = ((double) percentage)/100;
-                     double weightGrade = weight * avg;
-                     average += weightGrade;
+					if (assignName.equals(rubricMetric)) {
+						matches++;
+						grade += Integer.parseInt(gradeTable.getValueAt(k,j).toString());
+						avg = grade/matches;
+					}	
+                    		}
+				
+				double weight = ((double) percentage)/100;
+                     		double weightGrade = weight * avg;
+                     		average += weightGrade;
                 	}
-					 	studentAvg[k] = average;
-					 }
+			studentAvg[k] = average;
+		}
 
                 ((DefaultTableModel)gradeTable.getModel()).addColumn("Student Average", studentAvg);
             }
